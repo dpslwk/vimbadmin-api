@@ -9,7 +9,8 @@
         "laravel/lumen-framework": "5.3.*",
         "vlucas/phpdotenv": "~2.2",
         "spatie/laravel-fractal": "^2.0",
-        "dusterio/lumen-passport": "^0.1.3"
+        "dusterio/lumen-passport": "^0.1.3",
+        "appzcoder/lumen-routes-list": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
