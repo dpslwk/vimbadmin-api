@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -13,4 +14,57 @@
 
 $app->get('/', function () use ($app) {
     return $app->version();
+});
+
+$app->group([], function () use ($app){
+
+    $app->get('domains', [
+        'uses' => 'DomainController@index',
+        'as' => 'domains.index'
+    ]);
+    $app->get('domains/{domain}', [
+        'uses' => 'DomainController@show',
+        'as' => 'domains.show'
+    ]);
+
+    // Mailboxes
+    $app->get('{domainName}/mailboxes/', [
+        'uses' => 'MailboxController@index',
+        'as' => 'mailboxes.index'
+    ]);
+    $app->get('{domainName}/mailboxes/{mailbox}', [
+        'uses' => 'MailboxController@show',
+        'as' => 'mailboxes.show'
+    ]);
+    $app->post('{domainName}/mailboxes/{mailbox}', [
+        'uses' => 'MailboxController@store',
+        'as' => 'mailboxes.store'
+    ]);
+    $app->put('{domainName}/mailboxes/{mailbox}', [
+        'uses' => 'MailboxController@update',
+        'as' => 'mailboxes.update'
+    ]);
+    $app->patch('{domainName}/mailboxes/{mailbox}', [
+        'uses' => 'MailboxController@update',
+        'as' => 'mailboxes.update'
+    ]);
+
+    // Aliases
+    $app->get('{domainName}/aliases/', [
+        'uses' => 'AliasController@index',
+        'as' => 'aliases.index'
+    ]);
+    $app->get('{domainName}/aliases/{alias}', [
+        'uses' => 'AliasController@show',
+        'as' => 'aliases.show'
+    ]);
+    $app->put('{domainName}/aliases/{alias}', [
+        'uses' => 'AliasController@update',
+        'as' => 'aliases.update'
+    ]);
+    $app->patch('{domainName}/aliases/{alias}', [
+        'uses' => 'AliasController@update',
+        'as' => 'aliases.update'
+    ]);
+
 });
