@@ -2,29 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\VbaModels\Domain;
 use App\VbaModels\Alias;
+use App\VbaModels\Domain;
+use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Transformers\AliasTransformer;
 
 
-class AliasController extends Controller
+class AliasController extends ApiController
 {
+    protected $aliasTransformer;
+
+    public function __construct(Domain $domain, AliasTransformer $aliasTransformer, Manager $fractal)
+    {
+        parent::__construct($domain, $fractal);
+        $this->aliasTransformer = $aliasTransformer;
+    }
 
     /**
-     * Helper to grab the domain object
-     * 
-     * @param  string $domainName
-     * @return App\VbaModels\Domain
-     */
-    protected function getDomain($domainName)
-    {
-        return Domain::where('domain', $domainName)->first();
-    }
-    
-    
-    /**
-     * All aliases for doamin.
+     * All aliases for domain.
      * or serach for a single alias in that domain.
      * 
      * @return \Illuminate\Http\Response
@@ -33,11 +30,13 @@ class AliasController extends Controller
     {
         $domain = $this->getDomain($domainName);
         if ($request->input('q')) {
-            $aliases = $domain->aliases()->where('username', $request->input('q'))->get();
+            $aliases = $domain->aliases()->where('address', $request->input('q'))->with(['domain'])->get();
         } else {
-            $aliases = $domain->aliases()->get();
+            $aliases = $domain->aliases()->with(['domain'])->get();
         }
-        return response()->json($aliases);
+        $data = $this->transformCollection($aliases, $this->aliasTransformer);
+
+        return $this->respond($data);
     }
 
     /**
@@ -49,6 +48,12 @@ class AliasController extends Controller
     public function store(Request $request, $domainName)
     {
         $domain = $this->getDomain($domainName);
+
+        if ($request->isMethod('patch')) {
+            // need to merge with request with existing record
+        } elseif ($request->isMethod('put')) {
+            // need to replace the existing record??
+        }
     }
 
     /**
@@ -60,8 +65,11 @@ class AliasController extends Controller
     public function show($domainName, $aliasId)
     {
         $domain = $this->getDomain($domainName);
-        $alias = $domain->aliases()->find($aliasId);
-        return response()->json($alias);
+        $alias = $domain->aliases()->with(['domain'])->find($aliasId);
+
+        $data = $this->transformItem($alias, $this->aliasTransformer);
+
+        return $this->respond($data);
     }
 
     /**

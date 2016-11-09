@@ -4,27 +4,24 @@ namespace App\Http\Controllers;
 
 use App\VbaModels\Domain;
 use App\VbaModels\Mailbox;
+use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Transformers\MailboxTransformer;
 
 
-class MailboxController extends Controller
+class MailboxController extends ApiController
 {
+    protected $mailboxTransformer;
 
-    /**
-     * Helper to grab the domain object
-     * 
-     * @param  string $domainName
-     * @return App\VbaModels\Domain
-     */
-    protected function getDomain($domainName)
+    public function __construct(Domain $domain, MailboxTransformer $mailboxTransformer, Manager $fractal)
     {
-        return Domain::where('domain', $domainName)->first();
+        parent::__construct($domain, $fractal);
+        $this->mailboxTransformer = $mailboxTransformer;
     }
     
-    
     /**
-     * All mailboxes for doamin.
+     * All mailboxes for domain.
      * or serach for a single mailbox in that domain.
      *
      * @return \Illuminate\Http\Response
@@ -33,11 +30,14 @@ class MailboxController extends Controller
     {
         $domain = $this->getDomain($domainName);
         if ($request->input('q')) {
-            $mailboxes = $domain->mailboxes()->where('username', $request->input('q'))->get();
+            $mailboxes = $domain->mailboxes()->where('username', $request->input('q'))->with(['domain'])->get();
         } else {
-            $mailboxes = $domain->mailboxes()->get();
+            $mailboxes = $domain->mailboxes()->with(['domain'])->get();
         }
-        return response()->json($mailboxes);
+
+        $data = $this->transformCollection($mailboxes, $this->mailboxTransformer);
+
+        return $this->respond($data);
     }
 
     /**
@@ -50,6 +50,12 @@ class MailboxController extends Controller
     public function store(Request $request, $domainName)
     {
         $domain = $this->getDomain($domainName);
+
+        if ($request->isMethod('patch')) {
+            // need to merge with request with existing record
+        } elseif ($request->isMethod('put')) {
+            // need to replace the existing record??
+        }
     }
 
     /**
@@ -61,8 +67,11 @@ class MailboxController extends Controller
     public function show($domainName, $mailboxId)
     {
         $domain = $this->getDomain($domainName);
-        $mailbox = $domain->mailboxes()->find($mailboxId);
-        return response()->json($mailbox);
+        $mailbox = $domain->mailboxes()->with(['domain'])->find($mailboxId);
+
+        $data = $this->transformItem($mailbox, $this->mailboxTransformer);
+
+        return $this->respond($data);
     }
 
     /**

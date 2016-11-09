@@ -3,15 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\VbaModels\Domain;
+use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Transformers\DomainTransformer;
 
-
-class DomainController extends Controller
+class DomainController extends ApiController
 {
+
+    protected $domainTransformer;
+
+    public function __construct(Domain $domain, DomainTransformer $domainTransformer, Manager $fractal)
+    {
+        parent::__construct($domain, $fractal);
+        $this->domainTransformer = $domainTransformer;
+    }
+
     
     /**
-     * Display a listing all doamins.
+     * Display a listing all domains.
      * Or serach for one.
      *
      * @return \Illuminate\Http\Response
@@ -19,11 +29,14 @@ class DomainController extends Controller
     public function index(Request $request)
     {
         if ($request->input('q')) {
-            $doamins = Domain::where('domain', $request->input('q'))->get();
+            $domains = $this->domain->where('domain', $request->input('q'))->get();
         } else {
-            $doamins = Domain::all();
+            $domains = $this->domain->all();
         }
-        return response()->json($doamins);
+        
+        $data = $this->transformCollection($domains, $this->domainTransformer);
+
+        return $this->respond($data);
     }
 
     /**
@@ -34,8 +47,10 @@ class DomainController extends Controller
      */
     public function show($domainId)
     {
-        $doamin = Domain::find($domainId);
-        return response()->json($doamin);
-    }
+        $domain = $this->domain->findOrFail($domainId);
 
+        $data = $this->transformItem($domain, $this->domainTransformer);
+
+        return $this->respond($data);
+    }
 }

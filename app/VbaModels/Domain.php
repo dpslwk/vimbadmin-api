@@ -59,7 +59,7 @@ class Domain extends Model
     ];
 
     /**
-     * Get the mailboxes for this doamin
+     * Get the mailboxes for this domain
      */
     public function mailboxes()
     {
@@ -67,7 +67,7 @@ class Domain extends Model
     }
     
     /**
-     * Get the aliases for this doamin
+     * Get the aliases for this domain
      */
     public function aliases()
     {
