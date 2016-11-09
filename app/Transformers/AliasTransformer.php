@@ -17,6 +17,12 @@ class AliasTransformer extends TransformerAbstract {
             "id" => $alias->id,
             "address" => $alias->address,
             "goto" => explode(',', $alias->goto),
+            'links'   => [
+                [
+                    'rel' => 'self',
+                    'uri' => '/'.$alias->domain->domain.'/aliases/'.$alias->id,
+                ]
+            ]
         ];
     }
 
@@ -24,7 +30,7 @@ class AliasTransformer extends TransformerAbstract {
     {
         $domain = $alias->domain;
         
-        return $this->item($domain, new DomainTransformer);
+        return $this->item($domain, new DomainTransformer, 'domain');
     }
 
 }

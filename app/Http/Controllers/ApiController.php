@@ -7,6 +7,7 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\TransformerAbstract;
+use League\Fractal\Serializer\JsonApiSerializer;
 use Illuminate\Http\Response as IlluminateResponse;
 
 class ApiController extends Controller 
@@ -19,6 +20,7 @@ class ApiController extends Controller
     {
         $this->domain = $domain;
         $this->fractal = $fractal;
+        $fractal->setSerializer(new JsonApiSerializer());
     }
 
     /**
@@ -32,16 +34,16 @@ class ApiController extends Controller
         return $this->domain->where('domain', $domainName)->first();
     }
 
-    protected function transformCollection($items, TransformerAbstract $transformer)
+    protected function transformCollection($items, TransformerAbstract $transformer, $type)
     {
-        $collection = new Collection($items, $transformer);
+        $collection = new Collection($items, $transformer, $type);
 
         return $this->fractal->createData($collection)->toArray();
     }
     
-    protected function transformItem($item, TransformerAbstract $transformer)
+    protected function transformItem($item, TransformerAbstract $transformer, $type)
     {
-        $item = new Item($item, $transformer);
+        $item = new Item($item, $transformer, $type);
 
         return $this->fractal->createData($item)->toArray();
     }

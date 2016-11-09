@@ -34,7 +34,7 @@ class AliasController extends ApiController
         } else {
             $aliases = $domain->aliases()->with(['domain'])->get();
         }
-        $data = $this->transformCollection($aliases, $this->aliasTransformer);
+        $data = $this->transformCollection($aliases, $this->aliasTransformer, 'alias');
 
         return $this->respond($data);
     }
@@ -67,7 +67,7 @@ class AliasController extends ApiController
         $domain = $this->getDomain($domainName);
         $alias = $domain->aliases()->with(['domain'])->find($aliasId);
 
-        $data = $this->transformItem($alias, $this->aliasTransformer);
+        $data = $this->transformItem($alias, $this->aliasTransformer, 'alias');
 
         return $this->respond($data);
     }

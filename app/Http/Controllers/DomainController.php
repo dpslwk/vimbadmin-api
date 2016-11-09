@@ -18,7 +18,6 @@ class DomainController extends ApiController
         parent::__construct($domain, $fractal);
         $this->domainTransformer = $domainTransformer;
     }
-
     
     /**
      * Display a listing all domains.
@@ -33,8 +32,8 @@ class DomainController extends ApiController
         } else {
             $domains = $this->domain->all();
         }
-        
-        $data = $this->transformCollection($domains, $this->domainTransformer);
+
+        $data = $this->transformCollection($domains, $this->domainTransformer, 'domain');
 
         return $this->respond($data);
     }
@@ -49,7 +48,7 @@ class DomainController extends ApiController
     {
         $domain = $this->domain->findOrFail($domainId);
 
-        $data = $this->transformItem($domain, $this->domainTransformer);
+        $data = $this->transformItem($domain, $this->domainTransformer, 'domain');
 
         return $this->respond($data);
     }

@@ -35,7 +35,7 @@ class MailboxController extends ApiController
             $mailboxes = $domain->mailboxes()->with(['domain'])->get();
         }
 
-        $data = $this->transformCollection($mailboxes, $this->mailboxTransformer);
+        $data = $this->transformCollection($mailboxes, $this->mailboxTransformer, 'mailbox');
 
         return $this->respond($data);
     }
@@ -69,7 +69,7 @@ class MailboxController extends ApiController
         $domain = $this->getDomain($domainName);
         $mailbox = $domain->mailboxes()->with(['domain'])->find($mailboxId);
 
-        $data = $this->transformItem($mailbox, $this->mailboxTransformer);
+        $data = $this->transformItem($mailbox, $this->mailboxTransformer, 'mailbox');
 
         return $this->respond($data);
     }

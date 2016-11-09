@@ -10,7 +10,13 @@ class DomainTransformer extends TransformerAbstract {
     {
         return [
             'id' => $domain->id,
-            'domain' => $domain->domain,  
+            'domain' => $domain->domain,
+            'links'   => [
+                [
+                    'rel' => 'self',
+                    'uri' => '/domains/'.$domain->id,
+                ]
+            ]
         ];
     }
 

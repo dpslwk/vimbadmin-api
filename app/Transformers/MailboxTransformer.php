@@ -17,6 +17,12 @@ class MailboxTransformer extends TransformerAbstract {
             "id" => $mailbox->id,
             "username" => $mailbox->username,
             "name" => $mailbox->name,
+            'links'   => [
+                [
+                    'rel' => 'self',
+                    'uri' => '/'.$mailbox->domain->domain.'/mailboxes/'.$mailbox->id,
+                ]
+            ]
         ];
     }
 
@@ -25,7 +31,7 @@ class MailboxTransformer extends TransformerAbstract {
 
         $domain = $mailbox->domain;
 
-        return $this->item($domain, new DomainTransformer);
+        return $this->item($domain, new DomainTransformer, 'domain');
     }
 
 }
