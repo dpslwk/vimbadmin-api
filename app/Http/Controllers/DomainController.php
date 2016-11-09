@@ -27,6 +27,11 @@ class DomainController extends ApiController
      */
     public function index(Request $request)
     {
+        if ($request->has('include')) {
+            $this->fractal->parseIncludes($request->input('include'));
+            // TODO: set eager loading
+        }
+
         if ($request->input('q')) {
             $domains = $this->domain->where('domain', $request->input('q'))->get();
         } else {
@@ -46,6 +51,11 @@ class DomainController extends ApiController
      */
     public function show($domainId)
     {
+        if ($request->has('include')) {
+            $this->fractal->parseIncludes($request->input('include'));
+            // TODO: set eager loading
+        }
+        
         $domain = $this->domain->findOrFail($domainId);
 
         $data = $this->transformItem($domain, $this->domainTransformer, 'domain');
