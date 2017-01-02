@@ -74,7 +74,7 @@ class MailboxController extends ApiController
     public function show($domainName, $mailboxId)
     {
         $domain = $this->getDomain($domainName);
-        $mailbox = $domain->mailboxes()->with(['domain'])->find($mailboxId);
+        $mailbox = $domain->mailboxes()->with(['domain'])->findOrFail($mailboxId);
 
         $data = $this->transformItem($mailbox);
 

@@ -50,7 +50,7 @@ class ApiController extends Controller
      */
     protected function getDomain($domainName)
     {
-        return $this->domain->where('domain', $domainName)->first();
+        return $this->domain->where('domain', $domainName)->firstOrFail();
     }
 
     /**

@@ -5,9 +5,10 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -45,6 +46,37 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof ModelNotFoundException) {
+            $data = [
+                'errors' => [
+                    [
+                        'status' => IlluminateResponse::HTTP_NOT_FOUND,
+                        'title' => 'Not Found',
+                        'detail' => 'The requested resource does not exist.',
+                    ]
+                ]
+            ];
+
+            return response()->json($data, IlluminateResponse::HTTP_NOT_FOUND);
+        }
+
+        if ($e instanceof ValidationException) {
+            // dd($e->getResponse()->getData());
+
+            $data = [
+                'errors' => [
+                    [
+                        'status' => IlluminateResponse::HTTP_CONFLICT,
+                        'title' => 'Validation Confilict',
+                        'detail' => 'The requested does not pass the Validation.',
+                        'meta' => $e->getResponse()->getData(),
+                    ]
+                ]
+            ];
+            // var_dump($e);
+            return response()->json($data, IlluminateResponse::HTTP_CONFLICT);
+        }
+
         return parent::render($request, $e);
     }
 }

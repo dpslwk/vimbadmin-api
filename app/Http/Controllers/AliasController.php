@@ -71,7 +71,7 @@ class AliasController extends ApiController
     public function show($domainName, $aliasId)
     {
         $domain = $this->getDomain($domainName);
-        $alias = $domain->aliases()->with(['domain'])->find($aliasId);
+        $alias = $domain->aliases()->with(['domain'])->findOrFail($aliasId);
         $data = $this->transformItem($alias);
 
         return $this->respond($data);
