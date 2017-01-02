@@ -6,10 +6,11 @@ use App\Transformers\MailboxTransformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\TransformerAbstract;
 
-class DomainTransformer extends TransformerAbstract {
+class DomainTransformer extends TransformerAbstract
+{
 
     /**
-     * List of resources possible to include
+     * List of resources possible to include.
      *
      * @var array
      */
@@ -18,22 +19,21 @@ class DomainTransformer extends TransformerAbstract {
         'aliases'
     ];
 
+    /**
+     * defines how to transform the model.
+     * @param  Domain $domain
+     * @return array
+     */
     public function transform(Domain $domain)
     {
         return [
             'id' => $domain->id,
             'domain' => $domain->domain,
-            'links'   => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/domains/'.$domain->id,
-                ]
-            ]
         ];
     }
 
     /**
-     * Include Mailboxes
+     * Include Mailboxes.
      *
      * @return League\Fractal\ItemResource
      */
@@ -45,7 +45,7 @@ class DomainTransformer extends TransformerAbstract {
     }
 
     /**
-     * Include Aliases
+     * Include Aliases.
      *
      * @return League\Fractal\ItemResource
      */
@@ -55,5 +55,4 @@ class DomainTransformer extends TransformerAbstract {
 
         return $this->collection($aliases, new AliasTransformer, 'alias');
     }
-
 }

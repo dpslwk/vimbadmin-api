@@ -12,15 +12,23 @@ use Illuminate\Http\Response as IlluminateResponse;
 
 class ApiController extends Controller 
 {
-    
+    /**
+     * @var Domain
+     */
     protected $domain;
+
+    /**
+     * @var Manager
+     */
     protected $fractal;
 
     public function __construct(Domain $domain, Manager $fractal)
     {
         $this->domain = $domain;
         $this->fractal = $fractal;
-        $fractal->setSerializer(new JsonApiSerializer());
+        $domainName = $this->routeParameter('domainName');
+        $baseUrl = url(is_null($domainName)?'':'/'.$domainName);
+        $fractal->setSerializer(new JsonApiSerializer($baseUrl));
     }
 
     /**
@@ -67,4 +75,16 @@ class ApiController extends Controller
         return response()->json($data, $this->getStatusCode(), $headers);
     }
 
+    /**
+     * Get a given parameter from the route.
+     * https://gist.github.com/irazasyed/8ce3b004177ce23af5ef
+     * @param $name
+     * @param null $default
+     * @return mixed
+     */
+    protected function routeParameter($name, $default = null)
+    {
+        $routeInfo = app('request')->route();
+        return array_get($routeInfo[2], $name, $default);
+    }
 }
