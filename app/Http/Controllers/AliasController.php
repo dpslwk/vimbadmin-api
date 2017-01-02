@@ -58,11 +58,34 @@ class AliasController extends ApiController
     {
         $domain = $this->getDomain($domainName);
 
-        if ($request->isMethod('patch')) {
-            // need to merge with request with existing record
-        } elseif ($request->isMethod('put')) {
-            // need to replace the existing record??
-        }
+        $this->validate($request, [
+            'data' => 'required|array',
+            'data.type' => 'required|in:'.$this->type,
+            'data.id' => 'sometimes|null',
+            'data.attributes' => 'required|array',
+            'data.attributes.address' => 'required|email|unique:vba.alias,address',
+            'data.attributes.goto' => 'required|array',
+            'data.attributes.goto.*' => 'required_with:data.attributes.goto|email',
+            'data.relationships' => 'required|array',
+            'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
+            'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
+        ]);
+
+        $requestData = $request->all();
+
+        // do extra work to check domain counts allow this
+
+        // create the new alias
+        $alias = $domain->aliases()->create([
+            'address' => $requestData['data']['attributes']['address'],
+            'goto' => implode(',', $requestData['data']['attributes']['goto']),
+        ]);
+
+        // do extra work to update the domain counts??
+
+        $data = $this->transformItem($alias);
+
+        return $this->respondCreated($data);
     }
 
     /**
@@ -92,6 +115,34 @@ class AliasController extends ApiController
     public function update(Request $request, string $domainName, int $aliasId)
     {
         $domain = $this->getDomain($domainName);
+        $alias = $domain->aliases()->with(['domain'])->findOrFail($aliasId);
+
+        $this->validate($request, [
+            'data' => 'required|array',
+            'data.type' => 'required|in:'.$this->type,
+            'data.id' => 'required|integer|in:'.$aliasId,
+            'data.attributes' => 'required|array',
+            'data.attributes.address' => 'sometimes|required|email',
+            'data.attributes.goto' => 'sometimes|required|array',
+            'data.attributes.goto.*' => 'required_with:data.attributes.goto|email',
+            'data.relationships' => 'sometimes|required|array',
+            'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
+            'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
+        ]);
+
+        $requestData = $request->all();
+
+        if (isset($requestData['data']['attributes']['address'])) {
+            $alias->address = $requestData['data']['attributes']['address'];
+        }
+
+        if (isset($requestData['data']['attributes']['goto'])) {
+            $alias->goto = implode(',', $requestData['data']['attributes']['goto']);
+        }
+
+        $domain->aliases()->save($alias);
+
+        return $this->respond([]);
     }
 
 }

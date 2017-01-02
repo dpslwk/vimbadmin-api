@@ -58,9 +58,9 @@ $app->group([], function () use ($app){
         'uses' => 'AliasController@show',
         'as' => 'aliases.show'
     ]);
-    $app->put('{domainName}/aliases/{alias}', [
-        'uses' => 'AliasController@update',
-        'as' => 'aliases.update'
+    $app->post('{domainName}/aliases/', [
+        'uses' => 'AliasController@store',
+        'as' => 'aliases.store'
     ]);
     $app->patch('{domainName}/aliases/{alias}', [
         'uses' => 'AliasController@update',
