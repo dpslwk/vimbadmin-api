@@ -36,7 +36,7 @@ class DomainController extends ApiController
     {
         if ($request->has('include')) {
             $this->fractal->parseIncludes($request->input('include'));
-            // TODO: set eager loading
+            $this->domain->load($request->input('include'));
         }
 
         if ($request->input('q')) {
@@ -61,7 +61,7 @@ class DomainController extends ApiController
     {
         if ($request->has('include')) {
             $this->fractal->parseIncludes($request->input('include'));
-            // TODO: set eager loading
+            $this->domain->load($request->input('include'));
         }
         
         $domain = $this->domain->findOrFail($domainId);
