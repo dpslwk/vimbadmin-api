@@ -121,6 +121,57 @@ class ApiController extends Controller
     }
 
     /**
+     * [respond description]
+     * @param  array $data
+     * @param  string $related
+     * @param  array  $headers
+     * @return \Illuminate\Http\Response   
+     */
+    public function respondRelated($data, $related, $headers = [])
+    {
+        $data['links'] = [
+            'self' => app('request')->fullUrl(),
+            'related' => $related,
+        ];
+        return response()->json($data, $this->getStatusCode(), $headers);
+    }
+
+    /**
+     * [respondCreated description]
+     * @param  array $data
+     * @return \Illuminate\Http\Response
+     */
+    public function respondCreated($data)
+    {   
+        return $this->setStatusCode(IlluminateResponse::HTTP_CREATED)->respond($data, $headers);
+    }
+
+    /**
+     * [respondNotFound description]
+     * @param  string $message
+     * @return \Illuminate\Http\Response
+     */
+    public function respondNotFound($message = 'Not Found')
+    {
+        return $this->setStatusCode(IlluminateResponse::HTTP_NOT_FOUND)->respondWithError($message);
+    }
+    
+    /**
+     * [respondWithError description]
+     * @param  string $message
+     * @return \Illuminate\Http\Response
+     */
+    public function respondWithError($message)
+    {
+        return $this->respond([
+            'errors' => [
+                'title' => $message,
+                'status' => $this->getStatusCode(),
+            ]
+        ]);
+    }
+
+    /**
      * Get a given parameter from the route.
      * https://gist.github.com/irazasyed/8ce3b004177ce23af5ef
      * @param $name
