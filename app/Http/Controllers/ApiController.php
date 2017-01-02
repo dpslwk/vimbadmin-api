@@ -114,6 +114,9 @@ class ApiController extends Controller
      */
     public function respond($data, $headers = [])
     {
+        $data['links'] = [
+            'self' => app('request')->fullUrl(),
+        ];
         return response()->json($data, $this->getStatusCode(), $headers);
     }
 
