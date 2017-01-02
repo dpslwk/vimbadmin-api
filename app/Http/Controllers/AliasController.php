@@ -29,10 +29,12 @@ class AliasController extends ApiController
     /**
      * All aliases for domain.
      * or serach for a single alias in that domain.
-     * 
+     *
+     * @param  Request $request
+     * @param  string $domainName
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $domainName)
+    public function index(Request $request, string $domainName)
     {
         $domain = $this->getDomain($domainName);
         if ($request->input('q')) {
@@ -48,10 +50,11 @@ class AliasController extends ApiController
     /**
      * Store a newly created alias.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     * @param  string $domainName
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $domainName)
+    public function store(Request $request, string $domainName)
     {
         $domain = $this->getDomain($domainName);
 
@@ -66,9 +69,10 @@ class AliasController extends ApiController
      * Display the specified alias.
      *
      * @param  int  $aliasId
+     * @param  string $domainName
      * @return \Illuminate\Http\Response
      */
-    public function show($domainName, $aliasId)
+    public function show(string $domainName, int $aliasId)
     {
         $domain = $this->getDomain($domainName);
         $alias = $domain->aliases()->with(['domain'])->findOrFail($aliasId);
@@ -81,10 +85,11 @@ class AliasController extends ApiController
      * Update the specified alias.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  string $domainName
      * @param  int  $aliasId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $domainName, $aliasId)
+    public function update(Request $request, string $domainName, int $aliasId)
     {
         $domain = $this->getDomain($domainName);
     }

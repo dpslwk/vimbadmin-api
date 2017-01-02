@@ -31,9 +31,11 @@ class MailboxController extends ApiController
      * All mailboxes for domain.
      * or serach for a single mailbox in that domain.
      *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string $domainName
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $domainName)
+    public function index(Request $request, string $domainName)
     {
         $domain = $this->getDomain($domainName);
         if ($request->input('q')) {
@@ -52,9 +54,10 @@ class MailboxController extends ApiController
      * Note we may automaticly create a new alias base on setting file
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  string $domainName
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $domainName)
+    public function store(Request $request, string $domainName)
     {
         $domain = $this->getDomain($domainName);
 
@@ -68,10 +71,11 @@ class MailboxController extends ApiController
     /**
      * Display the specified mailbox.
      *
+     * @param  string $domainName
      * @param  int  $mailboxId
      * @return \Illuminate\Http\Response
      */
-    public function show($domainName, $mailboxId)
+    public function show(string $domainName, int $mailboxId)
     {
         $domain = $this->getDomain($domainName);
         $mailbox = $domain->mailboxes()->with(['domain'])->findOrFail($mailboxId);
@@ -85,10 +89,11 @@ class MailboxController extends ApiController
      * Update the specified mailbox.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  string $domainName
      * @param  int  $mailboxId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $domainName, $mailboxId)
+    public function update(Request $request, string $domainName, int $mailboxId)
     {
         $domain = $this->getDomain($domainName);
     }

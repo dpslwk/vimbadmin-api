@@ -29,6 +29,7 @@ class DomainController extends ApiController
      * Display a listing all domains.
      * Or serach for one.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -52,10 +53,11 @@ class DomainController extends ApiController
     /**
      * Display the specified domain.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $domainId
      * @return \Illuminate\Http\Response
      */
-    public function show($domainId)
+    public function show(Request $request, $domainId)
     {
         if ($request->has('include')) {
             $this->fractal->parseIncludes($request->input('include'));

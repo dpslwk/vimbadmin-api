@@ -26,7 +26,7 @@ class Mailbox extends Model
      */
     const CREATED_AT = 'created';
     const UPDATED_AT = 'modified';
-
+    
     /**
      * The attributes that are mass assignable.
      *

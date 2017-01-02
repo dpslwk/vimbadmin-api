@@ -28,6 +28,12 @@ class ApiController extends Controller
     protected $fractal;
 
     /**
+     * Default status code for a resonse.
+     * @var int
+     */
+    protected $statusCode = IlluminateResponse::HTTP_OK;
+
+    /**
      * @param Domain              $domain
      * @param TransformerAbstract $transformer
      * @param Manager             $fractal
@@ -79,13 +85,20 @@ class ApiController extends Controller
         return $this->fractal->createData($item)->toArray();
     }
 
-    protected $statusCode = IlluminateResponse::HTTP_OK;
 
+    /**
+     * Get the status code for this request.
+     * @return int 
+     */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
 
+    /**
+     * Set the status code for this response.
+     * @param int $statusCode
+     */
     public function setStatusCode($statusCode)
     {
         $this->statusCode = $statusCode;
@@ -93,6 +106,12 @@ class ApiController extends Controller
         return $this;
     }
 
+    /**
+     * [respond description]
+     * @param  array $data
+     * @param  array  $headers
+     * @return \Illuminate\Http\Response   
+     */
     public function respond($data, $headers = [])
     {
         return response()->json($data, $this->getStatusCode(), $headers);
