@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Response as IlluminateResponse;
@@ -61,8 +62,6 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof ValidationException) {
-            // dd($e->getResponse()->getData());
-
             $data = [
                 'errors' => [
                     [
@@ -73,9 +72,26 @@ class Handler extends ExceptionHandler
                     ]
                 ]
             ];
-            // var_dump($e);
+
             return response()->json($data, IlluminateResponse::HTTP_CONFLICT);
         }
+
+        if ($e instanceof AuthenticationException) {
+            $data = [
+                'errors' => [
+                    [
+                        'status' => IlluminateResponse::HTTP_UNAUTHORIZED,
+                        'title' => 'Unauthorized',
+                        'detail' => 'You are not Authorized to perform this request.',
+                    ]
+                ]
+            ];
+            // var_dump($e);
+            return response()->json($data, IlluminateResponse::HTTP_UNAUTHORIZED);
+        }
+
+        
+
 
         return parent::render($request, $e);
     }
