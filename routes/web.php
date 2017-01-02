@@ -26,6 +26,14 @@ $app->group([], function () use ($app){
         'uses' => 'DomainController@show',
         'as' => 'domains.show'
     ]);
+    $app->get('domains/{domain}/relationships/mailboxes', [
+        'uses' => 'MailboxController@showRelationships',
+        'as' => 'domains.relationships.mailboxes',
+    ]);
+    $app->get('domains/{domain}/relationships/aliases', [
+        'uses' => 'AliasController@showRelationships',
+        'as' => 'domains.relationships.aliases',
+    ]);
 
     // Mailboxes
     $app->get('{domainName}/mailboxes/', [
@@ -44,6 +52,10 @@ $app->group([], function () use ($app){
         'uses' => 'MailboxController@update',
         'as' => 'mailboxes.update'
     ]);
+    $app->get('{domainName}/mailboxes/{mailbox}/relationships/domain', [
+        'uses' => 'DomainController@showMailboxRelationships',
+        'as' => 'mailboxes.relationships.domains',
+    ]);
 
     // Aliases
     $app->get('{domainName}/aliases/', [
@@ -61,6 +73,10 @@ $app->group([], function () use ($app){
     $app->patch('{domainName}/aliases/{alias}', [
         'uses' => 'AliasController@update',
         'as' => 'aliases.update'
+    ]);
+    $app->get('{domainName}/aliases/{alias}/relationships/domain', [
+        'uses' => 'DomainController@showAliasRelationships',
+        'as' => 'aliases.relationships.domains',
     ]);
 
 });

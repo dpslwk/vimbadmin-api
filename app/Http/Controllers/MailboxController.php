@@ -8,7 +8,7 @@ use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Transformers\MailboxTransformer;
-
+use League\Fractal\Serializer\JsonApiSerializer;
 
 class MailboxController extends ApiController
 {
@@ -145,4 +145,29 @@ class MailboxController extends ApiController
         return $this->respond([]);
     }
 
+    /**
+     * Show just the repaltionships.
+     * @param  Request $request
+     * @param  int  $domainId
+     * @return \Illuminate\Http\Response
+     */
+    public function showRelationships(Request $request, int $domainId)
+    {
+        $domain = $this->domain->findOrFail($domainId);
+        $mailboxes = $domain->mailboxes()->get();
+        // TODO: handle empty response
+        $this->fractal->setSerializer(new JsonApiSerializer(url()));
+        $data = $this->transformCollection($mailboxes);
+        $newdata = [];
+        foreach ($data['data'] as $item) {
+            unset($item['attributes']);
+            unset($item['relationships']);
+            array_push($newdata, $item);
+        }
+        $data['data'] = $newdata;
+        unset($data['included']);
+        $related = url($domain->domain.'/mailboxes');
+
+        return $this->respondRelated($data, $related);    
+    }
 }

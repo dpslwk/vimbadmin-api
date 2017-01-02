@@ -145,4 +145,29 @@ class AliasController extends ApiController
         return $this->respond([]);
     }
 
+    /**
+     * Show just the repaltionships.
+     * @param  Request $request
+     * @param  int  $domainId
+     * @return \Illuminate\Http\Response
+     */
+    public function showRelationships(Request $request, int $domainId)
+    {
+        $domain = $this->domain->findOrFail($domainId);
+        $aliases = $domain->aliases()->get();
+        // TODO: handle empty response
+        $this->fractal->setSerializer(new JsonApiSerializer(url()));
+        $data = $this->transformCollection($aliases);
+        $newdata = [];
+        foreach ($data['data'] as $item) {
+            unset($item['attributes']);
+            unset($item['relationships']);
+            array_push($newdata, $item);
+        }
+        $data['data'] = $newdata;
+        unset($data['included']);
+        $related = url($domain->domain.'/aliases');
+
+        return $this->respondRelated($data, $related);    
+    }
 }
