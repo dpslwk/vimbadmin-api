@@ -30,6 +30,15 @@ VBA_USERNAME=homestead
 VBA_PASSWORD=secret
 ```
 
+Create a new set of client credentials with
+`php artisan passport:client --personal`
+This will give you a `Client ID` & `Client Secret` these will be need by your client
+
+Use the ID and Secret to request a `client_credentials` grant_type
+http://vimbadmin-api.dev/oauth/token
+
+Scopes not yet implmented
+
 
 # Lumen PHP Framework
 

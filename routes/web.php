@@ -1,6 +1,5 @@
 <?php
 
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -16,7 +15,7 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->group([], function () use ($app){
+$app->group(['middleware' => 'client_credentials'], function () use ($app){
 
     $app->get('domains', [
         'uses' => 'DomainController@index',
