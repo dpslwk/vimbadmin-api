@@ -57,16 +57,41 @@ class MailboxController extends ApiController
      * @param  string $domainName
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, string $domainName)
-    {
-        $domain = $this->getDomain($domainName);
+    // public function store(Request $request, string $domainName)
+    // {
+    //     $domain = $this->getDomain($domainName);
 
-        if ($request->isMethod('patch')) {
-            // need to merge with request with existing record
-        } elseif ($request->isMethod('put')) {
-            // need to replace the existing record??
-        }
-    }
+    //     $this->validate($request, [
+    //         'data' => 'required|array',
+    //         'data.type' => 'required|in:'.$this->type,
+    //         'data.id' => 'required|integer|in:'.$mailboxId,
+    //         'data.attributes' => 'required|array',
+    //         // 'data.attributes.username' => 'sometimes|required|email',
+    //         // 'data.attributes.name' => 'sometimes|required|string',
+    //         'data.relationships' => 'sometimes|required|array',
+    //         'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
+    //         'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
+    //     ]);
+
+    //     $requestData = $request->all();
+
+    //     // do extra work to check domain counts allow this
+
+    //     // create the new mailbox
+    //     $mailbox = $domain->mailboxes()->create([
+            
+    //     ]);
+
+    //     // need to create a new alias as well
+
+
+    //     // do extra work to update the domain counts??
+
+    //     $data = $this->transformItem($mailbox);
+
+    //     return $this->respondCreated($data);
+
+    // }
 
     /**
      * Display the specified mailbox.
@@ -96,6 +121,28 @@ class MailboxController extends ApiController
     public function update(Request $request, string $domainName, int $mailboxId)
     {
         $domain = $this->getDomain($domainName);
+        $mailbox = $domain->mailboxes()->with(['domain'])->findOrFail($mailboxIdl);
+
+        $this->validate($request, [
+            'data' => 'required|array',
+            'data.type' => 'required|in'.$this->type,
+            'data.id' => 'required|integer|in:'.$mailboxId,
+            'data.attributes' => 'required|array',
+            'data.attributes.name' => 'sometimes|required|string',
+            'data.relationships' => 'sometimes|required|array',
+            'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
+            'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
+        ]);
+
+        $requestData = $request->all();
+
+        if (isset($requestData['data']['attributes']['name'])) {
+            $mailbox->name = $requestData['data']['attributes']['name'];
+        }
+
+        $domain->mailboxes()->save($mailbox);
+
+        return $this->respond([]);
     }
 
 }

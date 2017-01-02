@@ -36,14 +36,10 @@ $app->group([], function () use ($app){
         'uses' => 'MailboxController@show',
         'as' => 'mailboxes.show'
     ]);
-    $app->post('{domainName}/mailboxes/{mailbox}', [
-        'uses' => 'MailboxController@store',
-        'as' => 'mailboxes.store'
-    ]);
-    $app->put('{domainName}/mailboxes/{mailbox}', [
-        'uses' => 'MailboxController@update',
-        'as' => 'mailboxes.update'
-    ]);
+    // $app->post('{domainName}/mailboxes/', [
+    //     'uses' => 'MailboxController@store',
+    //     'as' => 'mailboxes.store'
+    // ]);
     $app->patch('{domainName}/mailboxes/{mailbox}', [
         'uses' => 'MailboxController@update',
         'as' => 'mailboxes.update'
