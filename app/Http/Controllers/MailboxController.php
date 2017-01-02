@@ -12,12 +12,19 @@ use App\Transformers\MailboxTransformer;
 
 class MailboxController extends ApiController
 {
-    protected $mailboxTransformer;
+    /**
+     * @var string Type to use with Transformer
+     */
+    protected $type = 'mailboxes';
 
+    /**
+     * @param Domain             $domain
+     * @param MailboxTransformer $mailboxTransformer
+     * @param Manager            $fractal
+     */
     public function __construct(Domain $domain, MailboxTransformer $mailboxTransformer, Manager $fractal)
     {
-        parent::__construct($domain, $fractal);
-        $this->mailboxTransformer = $mailboxTransformer;
+        parent::__construct($domain, $mailboxTransformer, $fractal);
     }
     
     /**
@@ -35,7 +42,7 @@ class MailboxController extends ApiController
             $mailboxes = $domain->mailboxes()->with(['domain'])->get();
         }
 
-        $data = $this->transformCollection($mailboxes, $this->mailboxTransformer, 'mailbox');
+        $data = $this->transformCollection($mailboxes);
 
         return $this->respond($data);
     }
@@ -69,7 +76,7 @@ class MailboxController extends ApiController
         $domain = $this->getDomain($domainName);
         $mailbox = $domain->mailboxes()->with(['domain'])->find($mailboxId);
 
-        $data = $this->transformItem($mailbox, $this->mailboxTransformer, 'mailbox');
+        $data = $this->transformItem($mailbox);
 
         return $this->respond($data);
     }

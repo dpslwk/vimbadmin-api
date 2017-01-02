@@ -9,15 +9,21 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Transformers\AliasTransformer;
 
-
 class AliasController extends ApiController
 {
-    protected $aliasTransformer;
+    /**
+     * @var string Type to use with Transformer
+     */
+    protected $type = 'aliases';
 
+    /**
+     * @param Domain           $domain
+     * @param AliasTransformer $aliasTransformer
+     * @param Manager          $fractal
+     */
     public function __construct(Domain $domain, AliasTransformer $aliasTransformer, Manager $fractal)
     {
-        parent::__construct($domain, $fractal);
-        $this->aliasTransformer = $aliasTransformer;
+        parent::__construct($domain, $aliasTransformer, $fractal);
     }
 
     /**
@@ -34,7 +40,7 @@ class AliasController extends ApiController
         } else {
             $aliases = $domain->aliases()->with(['domain'])->get();
         }
-        $data = $this->transformCollection($aliases, $this->aliasTransformer, 'alias');
+        $data = $this->transformCollection($aliases);
 
         return $this->respond($data);
     }
@@ -66,8 +72,7 @@ class AliasController extends ApiController
     {
         $domain = $this->getDomain($domainName);
         $alias = $domain->aliases()->with(['domain'])->find($aliasId);
-
-        $data = $this->transformItem($alias, $this->aliasTransformer, 'alias');
+        $data = $this->transformItem($alias);
 
         return $this->respond($data);
     }

@@ -18,13 +18,24 @@ class ApiController extends Controller
     protected $domain;
 
     /**
+     * @var TransformerAbstract
+     */
+    protected $transformer;
+
+    /**
      * @var Manager
      */
     protected $fractal;
 
-    public function __construct(Domain $domain, Manager $fractal)
+    /**
+     * @param Domain              $domain
+     * @param TransformerAbstract $transformer
+     * @param Manager             $fractal
+     */
+    public function __construct(Domain $domain, TransformerAbstract $transformer, Manager $fractal)
     {
         $this->domain = $domain;
+        $this->transformer = $transformer;
         $this->fractal = $fractal;
         $domainName = $this->routeParameter('domainName');
         $baseUrl = url(is_null($domainName)?'':'/'.$domainName);
@@ -32,7 +43,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Helper to grab the domain object
+     * Helper to grab the domain object.
      * 
      * @param  string $domainName
      * @return App\VbaModels\Domain
@@ -42,16 +53,28 @@ class ApiController extends Controller
         return $this->domain->where('domain', $domainName)->first();
     }
 
-    protected function transformCollection($items, TransformerAbstract $transformer, $type)
+    /**
+     * Transform a colletion of objects.
+     * 
+     * @param  mixed $items
+     * @return array
+     */
+    protected function transformCollection($items)
     {
-        $collection = new Collection($items, $transformer, $type);
+        $collection = new Collection($items, $this->transformer, $this->type);
 
         return $this->fractal->createData($collection)->toArray();
     }
     
-    protected function transformItem($item, TransformerAbstract $transformer, $type)
+    /**
+     * Transform a single Item.
+     * 
+     * @param  mixed $item
+     * @return array
+     */
+    protected function transformItem($item)
     {
-        $item = new Item($item, $transformer, $type);
+        $item = new Item($item, $this->transformer, $this->type);
 
         return $this->fractal->createData($item)->toArray();
     }

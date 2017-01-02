@@ -10,13 +10,19 @@ use App\Transformers\DomainTransformer;
 
 class DomainController extends ApiController
 {
+    /**
+     * @var string Type to use with Transformer
+     */
+    protected $type = 'domains';
 
-    protected $domainTransformer;
-
+    /**
+     * @param Domain            $domain
+     * @param DomainTransformer $domainTransformer
+     * @param Manager           $fractal
+     */
     public function __construct(Domain $domain, DomainTransformer $domainTransformer, Manager $fractal)
     {
-        parent::__construct($domain, $fractal);
-        $this->domainTransformer = $domainTransformer;
+        parent::__construct($domain, $domainTransformer, $fractal);
     }
     
     /**
@@ -38,7 +44,7 @@ class DomainController extends ApiController
             $domains = $this->domain->all();
         }
 
-        $data = $this->transformCollection($domains, $this->domainTransformer, 'domain');
+        $data = $this->transformCollection($domains);
 
         return $this->respond($data);
     }
@@ -58,7 +64,7 @@ class DomainController extends ApiController
         
         $domain = $this->domain->findOrFail($domainId);
 
-        $data = $this->transformItem($domain, $this->domainTransformer, 'domain');
+        $data = $this->transformItem($domain);
 
         return $this->respond($data);
     }
