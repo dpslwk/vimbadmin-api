@@ -50,6 +50,23 @@ class MailboxController extends ApiController
     }
 
     /**
+     * All mailboxes for domain.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int $domainId
+     * @return \Illuminate\Http\Response
+     */
+    public function showForDomain(Request $request, int $domainId)
+    {
+        $domain = $this->domain->findOrFail($domainId);
+        $mailboxes = $domain->mailboxes()->with(['domain'])->get();
+        
+        $data = $this->transformCollection($mailboxes);
+
+        return $this->respond($data);
+    }
+
+    /**
      * Store a newly created mailbox.
      * Note we may automaticly create a new alias base on setting file
      *

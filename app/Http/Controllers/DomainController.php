@@ -73,6 +73,40 @@ class DomainController extends ApiController
     }
 
     /**
+     * Display the specified domain for mailbox.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string $domainName
+     * @param int $mailboxId
+     * @return \Illuminate\Http\Response
+     */
+    public function showForMailbox(Request $request, $domainName, $mailboxId)
+    {
+        $domain = $this->getDomain($domainName);
+
+        $data = $this->transformItem($domain);
+
+        return $this->respond($data);
+    }
+        
+   /**
+     * Display the specified domain for alias.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string $domainName
+     * @param int $aliasId
+     * @return \Illuminate\Http\Response
+     */
+    public function showForAlias(Request $request, $domainName, $aliasId)
+    {
+        $domain = $this->getDomain($domainName);
+
+        $data = $this->transformItem($domain);
+
+        return $this->respond($data);
+    }
+
+    /**
      * Show just the mailbox relationships.
      * @param  Request $request
      * @param  string  $domainName

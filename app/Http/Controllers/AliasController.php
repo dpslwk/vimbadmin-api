@@ -48,6 +48,23 @@ class AliasController extends ApiController
     }
 
     /**
+     * All aliases for domain.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int $domainId
+     * @return \Illuminate\Http\Response
+     */
+    public function showForDomain(Request $request, int $domainId)
+    {
+        $domain = $this->domain->findOrFail($domainId);
+        $aliases = $domain->aliases()->with(['domain'])->get();
+        
+        $data = $this->transformCollection($aliases);
+
+        return $this->respond($data);
+    }
+
+    /**
      * Store a newly created alias.
      *
      * @param  \Illuminate\Http\Request $request

@@ -25,9 +25,17 @@ $app->group(['middleware' => 'client_credentials'], function () use ($app){
         'uses' => 'DomainController@show',
         'as' => 'domains.show'
     ]);
+    $app->get('domains/{domain}/mailboxes', [
+        'uses' => 'MailboxController@showForDomain',
+        'as' => 'domain.mailboxes',
+    ]);
     $app->get('domains/{domain}/relationships/mailboxes', [
         'uses' => 'MailboxController@showRelationships',
         'as' => 'domains.relationships.mailboxes',
+    ]);
+    $app->get('domains/{domain}/aliases', [
+        'uses' => 'AliasController@showForDomain',
+        'as' => 'domain.aliases',
     ]);
     $app->get('domains/{domain}/relationships/aliases', [
         'uses' => 'AliasController@showRelationships',
@@ -51,9 +59,13 @@ $app->group(['middleware' => 'client_credentials'], function () use ($app){
         'uses' => 'MailboxController@update',
         'as' => 'mailboxes.update'
     ]);
+    $app->get('{domainName}/mailboxes/{mailbox}/domain', [
+        'uses' => 'DomainController@showForMailbox',
+        'as' => 'mailbox.domain',
+    ]);
     $app->get('{domainName}/mailboxes/{mailbox}/relationships/domain', [
         'uses' => 'DomainController@showMailboxRelationships',
-        'as' => 'mailboxes.relationships.domains',
+        'as' => 'mailboxes.relationships.domain',
     ]);
 
     // Aliases
@@ -73,9 +85,13 @@ $app->group(['middleware' => 'client_credentials'], function () use ($app){
         'uses' => 'AliasController@update',
         'as' => 'aliases.update'
     ]);
+    $app->get('{domainName}/aliases/{mailbox}/domain', [
+        'uses' => 'DomainController@showForAlias',
+        'as' => 'aliases.domain',
+    ]);
     $app->get('{domainName}/aliases/{alias}/relationships/domain', [
         'uses' => 'DomainController@showAliasRelationships',
-        'as' => 'aliases.relationships.domains',
+        'as' => 'aliases.relationships.domain',
     ]);
 
 });
