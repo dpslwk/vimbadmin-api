@@ -36,8 +36,9 @@ class DomainController extends ApiController
     public function index(Request $request)
     {
         if ($request->has('include')) {
-            $this->fractal->parseIncludes($request->input('include'));
-            $this->domain->load($request->input('include'));
+            $includes = explode(',', $request->input('include'));
+            $this->fractal->parseIncludes($includes);
+            $this->domain->load($includes);
         }
 
         if ($request->input('q')) {
@@ -61,8 +62,9 @@ class DomainController extends ApiController
     public function show(Request $request, $domainId)
     {
         if ($request->has('include')) {
-            $this->fractal->parseIncludes($request->input('include'));
-            $this->domain->load($request->input('include'));
+            $includes = explode(',', $request->input('include'));
+            $this->fractal->parseIncludes($includes);
+            $this->domain->load($includes);
         }
         
         $domain = $this->domain->findOrFail($domainId);
