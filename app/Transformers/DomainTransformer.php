@@ -41,7 +41,7 @@ class DomainTransformer extends TransformerAbstract
     {
         $mailboxes = $domain->mailboxes->all();
 
-        return $this->collection($mailboxes, new MailboxTransformer, 'mailbox');
+        return $this->collection($mailboxes, new MailboxTransformer, 'mailboxes');
     }
 
     /**
@@ -53,6 +53,6 @@ class DomainTransformer extends TransformerAbstract
     {
         $aliases = $domain->aliases->all();
 
-        return $this->collection($aliases, new AliasTransformer, 'alias');
+        return $this->collection($aliases, new AliasTransformer, 'aliases');
     }
 }

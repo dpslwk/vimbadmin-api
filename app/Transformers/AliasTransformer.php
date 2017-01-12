@@ -39,6 +39,6 @@ class AliasTransformer extends TransformerAbstract
     {
         $domain = $alias->domain;
         
-        return $this->item($domain, new DomainTransformer, 'domain');
+        return $this->item($domain, new DomainTransformer, 'domains');
     }
 }

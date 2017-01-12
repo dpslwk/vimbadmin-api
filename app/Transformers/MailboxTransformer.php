@@ -41,6 +41,6 @@ class MailboxTransformer extends TransformerAbstract
 
         $domain = $mailbox->domain;
 
-        return $this->item($domain, new DomainTransformer, 'domain');
+        return $this->item($domain, new DomainTransformer, 'domains');
     }
 }
