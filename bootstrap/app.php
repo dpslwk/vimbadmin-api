@@ -60,12 +60,12 @@ $app->singleton(
 */
 
 $app->middleware([
-   App\Http\Middleware\JsonRequestMiddleware::class
+   App\Http\Middleware\JsonRequestMiddleware::class,
 ]);
 
 $app->routeMiddleware([
-    'auth' => App\Http\Middleware\Authenticate::class,
-    'client_credentials' => Laravel\Passport\Http\Middleware\CheckClientCredentials::Class,
+    'auth'               => App\Http\Middleware\Authenticate::class,
+    'client_credentials' => Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
 ]);
 
 /*

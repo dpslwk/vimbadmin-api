@@ -3,11 +3,11 @@
 namespace App\Exceptions;
 
 use Exception;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\Response as IlluminateResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Response as IlluminateResponse;
+use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -30,7 +30,8 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception  $e
+     * @param \Exception $e
+     *
      * @return void
      */
     public function report(Exception $e)
@@ -41,8 +42,9 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $e
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception               $e
+     *
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $e)
@@ -52,10 +54,10 @@ class Handler extends ExceptionHandler
                 'errors' => [
                     [
                         'status' => IlluminateResponse::HTTP_NOT_FOUND,
-                        'title' => 'Not Found',
+                        'title'  => 'Not Found',
                         'detail' => 'The requested resource does not exist.',
-                    ]
-                ]
+                    ],
+                ],
             ];
 
             return response()->json($data, IlluminateResponse::HTTP_NOT_FOUND);
@@ -66,11 +68,11 @@ class Handler extends ExceptionHandler
                 'errors' => [
                     [
                         'status' => IlluminateResponse::HTTP_CONFLICT,
-                        'title' => 'Validation Confilict',
+                        'title'  => 'Validation Confilict',
                         'detail' => 'The requested does not pass the Validation.',
-                        'meta' => $e->getResponse()->getData(),
-                    ]
-                ]
+                        'meta'   => $e->getResponse()->getData(),
+                    ],
+                ],
             ];
 
             return response()->json($data, IlluminateResponse::HTTP_CONFLICT);
@@ -81,17 +83,14 @@ class Handler extends ExceptionHandler
                 'errors' => [
                     [
                         'status' => IlluminateResponse::HTTP_UNAUTHORIZED,
-                        'title' => 'Unauthorized',
+                        'title'  => 'Unauthorized',
                         'detail' => 'You are not Authorized to perform this request.',
-                    ]
-                ]
+                    ],
+                ],
             ];
             // var_dump($e);
             return response()->json($data, IlluminateResponse::HTTP_UNAUTHORIZED);
         }
-
-        
-
 
         return parent::render($request, $e);
     }

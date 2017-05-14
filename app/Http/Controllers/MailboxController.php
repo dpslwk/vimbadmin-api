@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Transformers\MailboxTransformer;
 use App\VbaModels\Domain;
 use App\VbaModels\Mailbox;
-use League\Fractal\Manager;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Transformers\MailboxTransformer;
+use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 class MailboxController extends ApiController
@@ -26,13 +25,14 @@ class MailboxController extends ApiController
     {
         parent::__construct($domain, $mailboxTransformer, $fractal);
     }
-    
+
     /**
      * All mailboxes for domain.
      * or serach for a single mailbox in that domain.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string $domainName
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $domainName
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request, string $domainName)
@@ -52,15 +52,16 @@ class MailboxController extends ApiController
     /**
      * All mailboxes for domain.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int $domainId
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $domainId
+     *
      * @return \Illuminate\Http\Response
      */
     public function showForDomain(Request $request, int $domainId)
     {
         $domain = $this->domain->findOrFail($domainId);
         $mailboxes = $domain->mailboxes()->with(['domain'])->get();
-        
+
         $data = $this->transformCollection($mailboxes);
 
         return $this->respond($data);
@@ -68,10 +69,11 @@ class MailboxController extends ApiController
 
     /**
      * Store a newly created mailbox.
-     * Note we may automaticly create a new alias base on setting file
+     * Note we may automaticly create a new alias base on setting file.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string $domainName
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $domainName
+     *
      * @return \Illuminate\Http\Response
      */
     // public function store(Request $request, string $domainName)
@@ -96,11 +98,10 @@ class MailboxController extends ApiController
 
     //     // create the new mailbox
     //     $mailbox = $domain->mailboxes()->create([
-            
+
     //     ]);
 
     //     // need to create a new alias as well
-
 
     //     // do extra work to update the domain counts??
 
@@ -113,8 +114,9 @@ class MailboxController extends ApiController
     /**
      * Display the specified mailbox.
      *
-     * @param  string $domainName
-     * @param  int  $mailboxId
+     * @param string $domainName
+     * @param int    $mailboxId
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(string $domainName, int $mailboxId)
@@ -130,9 +132,10 @@ class MailboxController extends ApiController
     /**
      * Update the specified mailbox.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string $domainName
-     * @param  int  $mailboxId
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $domainName
+     * @param int                      $mailboxId
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, string $domainName, int $mailboxId)
@@ -141,14 +144,14 @@ class MailboxController extends ApiController
         $mailbox = $domain->mailboxes()->with(['domain'])->findOrFail($mailboxIdl);
 
         $this->validate($request, [
-            'data' => 'required|array',
-            'data.type' => 'required|in'.$this->type,
-            'data.id' => 'required|integer|in:'.$mailboxId,
-            'data.attributes' => 'required|array',
-            'data.attributes.name' => 'sometimes|required|string',
-            'data.relationships' => 'sometimes|required|array',
+            'data'                                => 'required|array',
+            'data.type'                           => 'required|in'.$this->type,
+            'data.id'                             => 'required|integer|in:'.$mailboxId,
+            'data.attributes'                     => 'required|array',
+            'data.attributes.name'                => 'sometimes|required|string',
+            'data.relationships'                  => 'sometimes|required|array',
             'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
-            'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
+            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:'.$domain->id,
         ]);
 
         $requestData = $request->all();
@@ -164,8 +167,10 @@ class MailboxController extends ApiController
 
     /**
      * Show just the repaltionships.
-     * @param  Request $request
-     * @param  int  $domainId
+     *
+     * @param Request $request
+     * @param int     $domainId
+     *
      * @return \Illuminate\Http\Response
      */
     public function showRelationships(Request $request, int $domainId)
@@ -185,6 +190,6 @@ class MailboxController extends ApiController
         unset($data['included']);
         $related = url($domain->domain.'/mailboxes');
 
-        return $this->respondRelated($data, $related);    
+        return $this->respondRelated($data, $related);
     }
 }
