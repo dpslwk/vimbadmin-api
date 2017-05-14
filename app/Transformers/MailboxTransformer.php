@@ -1,33 +1,35 @@
-<?php namespace App\Transformers;
+<?php
+
+namespace App\Transformers;
 
 use App\VbaModels\Mailbox;
-use App\Transformers\DomainTransformer;
-use League\Fractal\Resource\Collection;
+
 use League\Fractal\TransformerAbstract;
 
 class MailboxTransformer extends TransformerAbstract
 {
-
     /**
      * List of resources to always include.
      *
      * @var array
      */
     protected $defaultIncludes = [
-        'domain'
+        'domain',
     ];
 
     /**
      * defines how to transform the model.
-     * @param  Mailbox $domain
+     *
+     * @param Mailbox $domain
+     *
      * @return array
      */
     public function transform(Mailbox $mailbox)
     {
         return [
-            "id" => $mailbox->id,
-            "username" => $mailbox->username,
-            "name" => $mailbox->name,
+            'id'       => $mailbox->id,
+            'username' => $mailbox->username,
+            'name'     => $mailbox->name,
         ];
     }
 
@@ -38,9 +40,8 @@ class MailboxTransformer extends TransformerAbstract
      */
     public function includeDomain(Mailbox $mailbox)
     {
-
         $domain = $mailbox->domain;
 
-        return $this->item($domain, new DomainTransformer, 'domains');
+        return $this->item($domain, new DomainTransformer(), 'domains');
     }
 }

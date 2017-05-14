@@ -12,7 +12,7 @@ class Alias extends Model
      * @var string
      */
     protected $connection = 'vba';
-    
+
     /**
      * The table associated with the model.
      *
@@ -21,8 +21,7 @@ class Alias extends Model
     protected $table = 'alias';
 
     /**
-     * Overide the timesatmp column names
-     *
+     * Overide the timesatmp column names.
      */
     const CREATED_AT = 'created';
     const UPDATED_AT = 'modified';
@@ -33,18 +32,17 @@ class Alias extends Model
      * @var array
      */
     protected $fillable = [
-    "address",
-    "goto",
-    "active",
-    "Domain_id",
+    'address',
+    'goto',
+    'active',
+    'Domain_id',
     ];
 
     /**
-     * Get the Domain that owns this mailbox
+     * Get the Domain that owns this mailbox.
      */
     public function domain()
     {
         return $this->belongsTo('App\VbaModels\Domain', 'Domain_id');
     }
-
 }

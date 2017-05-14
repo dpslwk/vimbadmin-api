@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Transformers\AliasTransformer;
 use App\VbaModels\Alias;
 use App\VbaModels\Domain;
-use League\Fractal\Manager;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Transformers\AliasTransformer;
+use League\Fractal\Manager;
 
 class AliasController extends ApiController
 {
@@ -30,8 +29,9 @@ class AliasController extends ApiController
      * All aliases for domain.
      * or serach for a single alias in that domain.
      *
-     * @param  Request $request
-     * @param  string $domainName
+     * @param Request $request
+     * @param string  $domainName
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request, string $domainName)
@@ -50,15 +50,16 @@ class AliasController extends ApiController
     /**
      * All aliases for domain.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int $domainId
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $domainId
+     *
      * @return \Illuminate\Http\Response
      */
     public function showForDomain(Request $request, int $domainId)
     {
         $domain = $this->domain->findOrFail($domainId);
         $aliases = $domain->aliases()->with(['domain'])->get();
-        
+
         $data = $this->transformCollection($aliases);
 
         return $this->respond($data);
@@ -67,8 +68,9 @@ class AliasController extends ApiController
     /**
      * Store a newly created alias.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  string $domainName
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $domainName
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, string $domainName)
@@ -76,16 +78,16 @@ class AliasController extends ApiController
         $domain = $this->getDomain($domainName);
 
         $this->validate($request, [
-            'data' => 'required|array',
-            'data.type' => 'required|in:'.$this->type,
-            'data.id' => 'sometimes|null',
-            'data.attributes' => 'required|array',
-            'data.attributes.address' => 'required|email|unique:vba.alias,address',
-            'data.attributes.goto' => 'required|array',
-            'data.attributes.goto.*' => 'required_with:data.attributes.goto|email',
-            'data.relationships' => 'required|array',
+            'data'                                => 'required|array',
+            'data.type'                           => 'required|in:'.$this->type,
+            'data.id'                             => 'sometimes|null',
+            'data.attributes'                     => 'required|array',
+            'data.attributes.address'             => 'required|email|unique:vba.alias,address',
+            'data.attributes.goto'                => 'required|array',
+            'data.attributes.goto.*'              => 'required_with:data.attributes.goto|email',
+            'data.relationships'                  => 'required|array',
             'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
-            'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
+            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:'.$domain->id,
         ]);
 
         $requestData = $request->all();
@@ -95,7 +97,7 @@ class AliasController extends ApiController
         // create the new alias
         $alias = $domain->aliases()->create([
             'address' => $requestData['data']['attributes']['address'],
-            'goto' => implode(',', $requestData['data']['attributes']['goto']),
+            'goto'    => implode(',', $requestData['data']['attributes']['goto']),
         ]);
 
         // do extra work to update the domain counts??
@@ -108,8 +110,9 @@ class AliasController extends ApiController
     /**
      * Display the specified alias.
      *
-     * @param  int  $aliasId
-     * @param  string $domainName
+     * @param int    $aliasId
+     * @param string $domainName
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(string $domainName, int $aliasId)
@@ -124,9 +127,10 @@ class AliasController extends ApiController
     /**
      * Update the specified alias.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string $domainName
-     * @param  int  $aliasId
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $domainName
+     * @param int                      $aliasId
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, string $domainName, int $aliasId)
@@ -135,16 +139,16 @@ class AliasController extends ApiController
         $alias = $domain->aliases()->with(['domain'])->findOrFail($aliasId);
 
         $this->validate($request, [
-            'data' => 'required|array',
-            'data.type' => 'required|in:'.$this->type,
-            'data.id' => 'required|integer|in:'.$aliasId,
-            'data.attributes' => 'required|array',
-            'data.attributes.address' => 'sometimes|required|email',
-            'data.attributes.goto' => 'sometimes|required|array',
-            'data.attributes.goto.*' => 'required_with:data.attributes.goto|email',
-            'data.relationships' => 'sometimes|required|array',
+            'data'                                => 'required|array',
+            'data.type'                           => 'required|in:'.$this->type,
+            'data.id'                             => 'required|integer|in:'.$aliasId,
+            'data.attributes'                     => 'required|array',
+            'data.attributes.address'             => 'sometimes|required|email',
+            'data.attributes.goto'                => 'sometimes|required|array',
+            'data.attributes.goto.*'              => 'required_with:data.attributes.goto|email',
+            'data.relationships'                  => 'sometimes|required|array',
             'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
-            'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
+            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:'.$domain->id,
         ]);
 
         $requestData = $request->all();
@@ -164,8 +168,10 @@ class AliasController extends ApiController
 
     /**
      * Show just the repaltionships.
-     * @param  Request $request
-     * @param  int  $domainId
+     *
+     * @param Request $request
+     * @param int     $domainId
+     *
      * @return \Illuminate\Http\Response
      */
     public function showRelationships(Request $request, int $domainId)
@@ -185,6 +191,6 @@ class AliasController extends ApiController
         unset($data['included']);
         $related = url($domain->domain.'/aliases');
 
-        return $this->respondRelated($data, $related);    
+        return $this->respondRelated($data, $related);
     }
 }

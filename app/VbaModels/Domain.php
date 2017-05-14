@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Domain extends Model
 {
-
     /**
      * The connection name for the model.
      *
@@ -22,8 +21,7 @@ class Domain extends Model
     protected $table = 'domain';
 
     /**
-     * Overide the timesatmp column names
-     *
+     * Overide the timesatmp column names.
      */
     const CREATED_AT = 'created';
     const UPDATED_AT = 'modified';
@@ -44,35 +42,33 @@ class Domain extends Model
      * @var array
      */
     protected $fillable = [
-        "description",
-        "domain",
-        "max_aliases",
-        "max_mailboxes",
-        "max_quota",
-        "transport",
-        "backupmx",
-        "active",
-        "homedir",
-        "maildir",
-        "uid",
-        "gid",
+        'description',
+        'domain',
+        'max_aliases',
+        'max_mailboxes',
+        'max_quota',
+        'transport',
+        'backupmx',
+        'active',
+        'homedir',
+        'maildir',
+        'uid',
+        'gid',
     ];
 
     /**
-     * Get the mailboxes for this domain
+     * Get the mailboxes for this domain.
      */
     public function mailboxes()
     {
-       return $this->hasMany('App\VbaModels\Mailbox', 'Domain_id'); 
+        return $this->hasMany('App\VbaModels\Mailbox', 'Domain_id');
     }
-    
+
     /**
-     * Get the aliases for this domain
+     * Get the aliases for this domain.
      */
     public function aliases()
     {
-       return $this->hasMany('App\VbaModels\Alias', 'Domain_id'); 
+        return $this->hasMany('App\VbaModels\Alias', 'Domain_id');
     }
-    
-
 }

@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-/**
+    /**
      * Bootstrap any application services.
      *
      * @return void
@@ -17,7 +17,6 @@ class AppServiceProvider extends ServiceProvider
             return is_null($value);
         }, 'The :attribute must be null.');
     }
-
 
     /**
      * Register any application services.

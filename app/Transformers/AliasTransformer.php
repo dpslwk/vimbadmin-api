@@ -1,8 +1,9 @@
-<?php namespace App\Transformers;
+<?php
+
+namespace App\Transformers;
 
 use App\VbaModels\Alias;
-use App\Transformers\DomainTransformer;
-use League\Fractal\Resource\Collection;
+
 use League\Fractal\TransformerAbstract;
 
 class AliasTransformer extends TransformerAbstract
@@ -13,20 +14,22 @@ class AliasTransformer extends TransformerAbstract
      * @var array
      */
     protected $defaultIncludes = [
-        'domain'
+        'domain',
     ];
 
     /**
      * defines how to transform the model.
-     * @param  Alias $domain
+     *
+     * @param Alias $domain
+     *
      * @return array
      */
     public function transform(Alias $alias)
     {
         return [
-            "id" => $alias->id,
-            "address" => $alias->address,
-            "goto" => explode(',', $alias->goto),
+            'id'      => $alias->id,
+            'address' => $alias->address,
+            'goto'    => explode(',', $alias->goto),
         ];
     }
 
@@ -38,7 +41,7 @@ class AliasTransformer extends TransformerAbstract
     public function includeDomain(Alias $alias)
     {
         $domain = $alias->domain;
-        
-        return $this->item($domain, new DomainTransformer, 'domains');
+
+        return $this->item($domain, new DomainTransformer(), 'domains');
     }
 }

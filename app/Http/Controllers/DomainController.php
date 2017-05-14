@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\VbaModels\Domain;
-use League\Fractal\Manager;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Transformers\DomainTransformer;
+use App\VbaModels\Domain;
+use Illuminate\Http\Request;
+use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 class DomainController extends ApiController
@@ -25,12 +24,13 @@ class DomainController extends ApiController
     {
         parent::__construct($domain, $domainTransformer, $fractal);
     }
-    
+
     /**
      * Display a listing all domains.
      * Or serach for one.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -55,8 +55,9 @@ class DomainController extends ApiController
     /**
      * Display the specified domain.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $domainId
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $domainId
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, $domainId)
@@ -66,7 +67,7 @@ class DomainController extends ApiController
             $this->fractal->parseIncludes($includes);
             $this->domain->load($includes);
         }
-        
+
         $domain = $this->domain->findOrFail($domainId);
 
         $data = $this->transformItem($domain);
@@ -77,9 +78,10 @@ class DomainController extends ApiController
     /**
      * Display the specified domain for mailbox.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string $domainName
-     * @param int $mailboxId
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $domainName
+     * @param int                      $mailboxId
+     *
      * @return \Illuminate\Http\Response
      */
     public function showForMailbox(Request $request, $domainName, $mailboxId)
@@ -90,13 +92,14 @@ class DomainController extends ApiController
 
         return $this->respond($data);
     }
-        
-   /**
+
+    /**
      * Display the specified domain for alias.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string $domainName
-     * @param int $aliasId
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $domainName
+     * @param int                      $aliasId
+     *
      * @return \Illuminate\Http\Response
      */
     public function showForAlias(Request $request, $domainName, $aliasId)
@@ -110,13 +113,15 @@ class DomainController extends ApiController
 
     /**
      * Show just the mailbox relationships.
-     * @param  Request $request
-     * @param  string  $domainName
-     * @param  int     $mailboxId
+     *
+     * @param Request $request
+     * @param string  $domainName
+     * @param int     $mailboxId
+     *
      * @return \Illuminate\Http\Response
      */
     public function showMailboxRelationships(Request $request, string $domainName, int $mailboxId)
-    {   
+    {
         $domain = $this->getDomain($domainName);
         $mailbox = $domain->mailboxes()->findOrFail($mailboxId);
         $this->fractal->setSerializer(new JsonApiSerializer(url()));
@@ -129,13 +134,15 @@ class DomainController extends ApiController
 
     /**
      * Show just the alias relationships.
-     * @param  Request $request
-     * @param  string  $domainName
-     * @param  int     $aliasId
+     *
+     * @param Request $request
+     * @param string  $domainName
+     * @param int     $aliasId
+     *
      * @return \Illuminate\Http\Response
      */
     public function showAliasRelationships(Request $request, string $domainName, int $aliasId)
-    {   
+    {
         $domain = $this->getDomain($domainName);
         $alias = $domain->aliases()->findOrFail($aliasId);
         $this->fractal->setSerializer(new JsonApiSerializer(url()));
