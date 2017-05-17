@@ -12,7 +12,8 @@ The down side of ViMdAdmin is that it has no APi front end and at Nottingham Hac
 
 # Setup Notes
 
-Two database conections are used, first to the app's own DB (this looks after the API oauth stuff), second to the ViMbAdmin DB, details for both need to be defined in the .env file as below
+Two database conections are used, first to the app's own DB (this looks after the API oauth stuff), second to the ViMbAdmin DB, details for both need to be defined in the .env file as below.
+Along with the location to the ViMbAdmin aplliction config file
 
 ```
 DB_CONNECTION=mysql
@@ -28,6 +29,8 @@ VBA_PORT=3306
 VBA_DATABASE=mailserver
 VBA_USERNAME=homestead
 VBA_PASSWORD=secret
+
+VBA_CONFIG_FILE=../../vimbadmin/application/configs/application.ini
 ```
 
 Create a new set of client credentials with

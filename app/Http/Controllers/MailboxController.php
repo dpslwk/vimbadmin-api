@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Transformers\MailboxTransformer;
 use App\VbaModels\Domain;
 use App\VbaModels\Mailbox;
-use Illuminate\Http\Request;
 use League\Fractal\Manager;
+use Illuminate\Http\Request;
+use Exceptions\ForbidenException;
+use App\Transformers\MailboxTransformer;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 class MailboxController extends ApiController
@@ -76,40 +77,69 @@ class MailboxController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    // public function store(Request $request, string $domainName)
-    // {
-    //     $domain = $this->getDomain($domainName);
+    public function store(Request $request, string $domainName)
+    {
+        $domain = $this->getDomain($domainName);
 
-    //     $this->validate($request, [
-    //         'data' => 'required|array',
-    //         'data.type' => 'required|in:'.$this->type,
-    //         'data.id' => 'required|integer|in:'.$mailboxId,
-    //         'data.attributes' => 'required|array',
-    //         // 'data.attributes.username' => 'sometimes|required|email',
-    //         // 'data.attributes.name' => 'sometimes|required|string',
-    //         'data.relationships' => 'sometimes|required|array',
-    //         'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
-    //         'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
-    //     ]);
+        $this->validate($request, [
+            'data' => 'required|array',
+            'data.type' => 'required|in:'.$this->type,
+            'data.id' => 'sometimes|client_generated_id_forbiden',
+            'data.attributes' => 'required|array',
+            'data.attributes.username' => 'required|email|unique:vba.mailbox,username|unique:vba.alias,address|regex:/'.$domain['domain'].'/',
+            'data.attributes.name' => 'required|string',
+            'data.relationships' => 'sometimes|required|array',
+            'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
+            'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
+        ]);
 
-    //     $requestData = $request->all();
+        $requestData = $request->all();
 
-    //     // do extra work to check domain counts allow this
+        // do extra work to check domain counts allow this
+        if ($domain['max_mailboxes'] != 0 && $domain['mailbox_count'] >= $domain['max_mailboxes']) {
+            throw new ForbidenException('You have used all of your allocated mailboxes.');
+        }
 
-    //     // create the new mailbox
-    //     $mailbox = $domain->mailboxes()->create([
+        // create the new mailbox
+        $mailbox = $domain->mailboxes()->create([
+            'username' => $requestData['data']['attributes']['username'],
+            'password' => 'doiahoidsa',
+            'name' => $requestData['data']['attributes']['name'],
+            'alt_email' => '',
+            'quota' => $domain['quota'],
+            'local_part' => explode('@', $requestData['data']['attributes']['username'])[0],
+            'active' => 1,
+            'access_restriction' => 'ALL',
+            'homedir' => $this->substitute($requestData['data']['attributes']['username'], config('vba.defaults.mailbox.homedir')),
+            'maildir' => $this->substitute($requestData['data']['attributes']['username'], config('vba.defaults.mailbox.maildir')),
+            'uid' => config('vba.defaults.mailbox.uid'),
+            'gid' => config('vba.defaults.mailbox.gid'),
+            'delete_pending' => false,
+        ]);
 
-    //     ]);
+        // hash the password
+        
+        if (config('vba.mailboxAliases') == 1) {
+            // need to create a new alias as well
+            $domain->aliases()->create([
+                'address' => $requestData['data']['attributes']['username'],
+                'goto'    => $requestData['data']['attributes']['username'],
+            ]);
+        }
 
-    //     // need to create a new alias as well
+        // // do extra work to update the domain counts??
+        $domain['mailbox_count'] += 1;
 
-    //     // do extra work to update the domain counts??
+        // TODO: some quota check thing 
+        
+        // save the chanegs 
+        $domain->save();
 
-    //     $data = $this->transformItem($mailbox);
+        $data = $this->transformItem($mailbox);
 
-    //     return $this->respondCreated($data);
+        return $this->respondCreated($data);
 
-    // }
+    }
 
     /**
      * Display the specified mailbox.

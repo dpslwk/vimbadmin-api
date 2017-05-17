@@ -82,7 +82,7 @@ class AliasController extends ApiController
             'data.type'                           => 'required|in:'.$this->type,
             'data.id'                             => 'sometimes|null',
             'data.attributes'                     => 'required|array',
-            'data.attributes.address'             => 'required|email|unique:vba.alias,address',
+            'data.attributes.address'             => 'required|email|unique:vba.alias,address|unique:vba.mailbox,username',
             'data.attributes.goto'                => 'required|array',
             'data.attributes.goto.*'              => 'required_with:data.attributes.goto|email',
             'data.relationships'                  => 'required|array',
@@ -93,6 +93,9 @@ class AliasController extends ApiController
         $requestData = $request->all();
 
         // do extra work to check domain counts allow this
+        if ($domain['max_aliases'] != 0 && $domain['alias_count'] >= $domain['max_aliases']) {
+            throw new ForbidenException('You have used all of your allocated aliases.');
+        }
 
         // create the new alias
         $alias = $domain->aliases()->create([
@@ -101,6 +104,10 @@ class AliasController extends ApiController
         ]);
 
         // do extra work to update the domain counts??
+        $domain['alias_count'] += 1;
+
+        // save the chanegs 
+        $domain->save();
 
         $data = $this->transformItem($alias);
 

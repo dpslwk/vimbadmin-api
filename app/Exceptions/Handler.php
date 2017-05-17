@@ -3,11 +3,12 @@
 namespace App\Exceptions;
 
 use Exception;
-use Illuminate\Auth\Access\AuthorizationException;
+use App\Exceptions\ForbidenException;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Response as IlluminateResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -90,6 +91,21 @@ class Handler extends ExceptionHandler
             ];
             // var_dump($e);
             return response()->json($data, IlluminateResponse::HTTP_UNAUTHORIZED);
+        }
+
+        if ($e instanceof ForbidenException) {
+            $data = [
+                'errors' => [
+                    [
+                        'status' => IlluminateResponse::HTTP_FORBIDDEN,
+                        'title'  => 'Forbiden',
+                        'detail' => 'This request is forbiden.',
+                        'meta'   => $e->getMessage(),
+                    ],
+                ],
+            ];
+
+            return response()->json($data, IlluminateResponse::HTTP_FORBIDDEN);
         }
 
         return parent::render($request, $e);

@@ -50,10 +50,10 @@ $app->group(['middleware' => 'client_credentials'], function () use ($app) {
         'uses' => 'MailboxController@show',
         'as'   => 'mailboxes.show',
     ]);
-    // $app->post('{domainName}/mailboxes/', [
-    //     'uses' => 'MailboxController@store',
-    //     'as' => 'mailboxes.store'
-    // ]);
+    $app->post('{domainName}/mailboxes/', [
+        'uses' => 'MailboxController@store',
+        'as' => 'mailboxes.store'
+    ]);
     $app->patch('{domainName}/mailboxes/{mailbox}', [
         'uses' => 'MailboxController@update',
         'as'   => 'mailboxes.update',
