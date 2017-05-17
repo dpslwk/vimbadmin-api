@@ -3,7 +3,6 @@
 namespace App\Transformers;
 
 use App\VbaModels\Mailbox;
-
 use League\Fractal\TransformerAbstract;
 
 class MailboxTransformer extends TransformerAbstract

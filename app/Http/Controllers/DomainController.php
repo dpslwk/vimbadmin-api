@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Transformers\DomainTransformer;
 use App\VbaModels\Domain;
-use Illuminate\Http\Request;
 use League\Fractal\Manager;
+use Illuminate\Http\Request;
+use App\Transformers\DomainTransformer;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 class DomainController extends ApiController

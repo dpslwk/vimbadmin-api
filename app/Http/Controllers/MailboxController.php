@@ -108,12 +108,12 @@ class MailboxController extends ApiController
             $password = \PasswordGenerator::getASCIIPassword(64);
         }
 
-        if (app()->environment('production')){
+        if (app()->environment('production')) {
             $mailbox['password'] = $this->hashPassword($requestData['data']['attributes']['username'], $password);
         } else {
             $mailbox['password'] = $password;
         }
-        
+
         // create the new mailbox
         $mailbox = $domain->mailboxes()->create([
             'username'           => $requestData['data']['attributes']['username'],
