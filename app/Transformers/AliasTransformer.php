@@ -3,7 +3,6 @@
 namespace App\Transformers;
 
 use App\VbaModels\Alias;
-
 use League\Fractal\TransformerAbstract;
 
 class AliasTransformer extends TransformerAbstract

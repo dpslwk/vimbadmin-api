@@ -3,7 +3,6 @@
 namespace App\Transformers;
 
 use App\VbaModels\Domain;
-
 use League\Fractal\TransformerAbstract;
 
 class DomainTransformer extends TransformerAbstract
