@@ -106,7 +106,7 @@ class AliasController extends ApiController
         // do extra work to update the domain counts??
         $domain['alias_count'] += 1;
 
-        // save the chanegs 
+        // save the chanegs
         $domain->save();
 
         $data = $this->transformItem($alias);

@@ -205,24 +205,25 @@ class ApiController extends Controller
     }
 
     /**
-     * Replaces the following characters in the $str parameter:
+     * Replaces the following characters in the $str parameter:.
      *
      * %u - the local part of the username (email address)
      * %d - the domain part of the username (email address)
      * %m - the username (email address)
      *
      * @param string $email An email address used to extract the domain name
-     * @param string $str The format string
+     * @param string $str   The format string
+     *
      * @return string The newly created maildir (also set in the object)
      */
-    protected function substitute( $email, $str )
+    protected function substitute($email, $str)
     {
-        list( $un, $dn ) = explode( '@', $email );
+        list($un, $dn) = explode('@', $email);
 
-        $str = str_replace ( '%atmail', substr( $email, 0, 1 ) . '/' . substr( $email, 1, 1 ) . '/' . $email, $str );
-        $str = str_replace ( '%u',      $un,    $str );
-        $str = str_replace ( '%d',      $dn,    $str );
-        $str = str_replace ( '%m',      $email, $str );
+        $str = str_replace('%atmail', substr($email, 0, 1).'/'.substr($email, 1, 1).'/'.$email, $str);
+        $str = str_replace('%u', $un, $str);
+        $str = str_replace('%d', $dn, $str);
+        $str = str_replace('%m', $email, $str);
 
         return $str;
     }

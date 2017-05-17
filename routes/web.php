@@ -52,7 +52,7 @@ $app->group(['middleware' => 'client_credentials'], function () use ($app) {
     ]);
     $app->post('{domainName}/mailboxes/', [
         'uses' => 'MailboxController@store',
-        'as' => 'mailboxes.store'
+        'as'   => 'mailboxes.store',
     ]);
     $app->patch('{domainName}/mailboxes/{mailbox}', [
         'uses' => 'MailboxController@update',

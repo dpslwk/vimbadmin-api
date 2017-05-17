@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Transformers\MailboxTransformer;
 use App\VbaModels\Domain;
 use App\VbaModels\Mailbox;
-use League\Fractal\Manager;
-use Illuminate\Http\Request;
 use Exceptions\ForbidenException;
-use App\Transformers\MailboxTransformer;
+use Illuminate\Http\Request;
+use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 class MailboxController extends ApiController
@@ -82,15 +82,15 @@ class MailboxController extends ApiController
         $domain = $this->getDomain($domainName);
 
         $this->validate($request, [
-            'data' => 'required|array',
-            'data.type' => 'required|in:'.$this->type,
-            'data.id' => 'sometimes|client_generated_id_forbiden',
-            'data.attributes' => 'required|array',
-            'data.attributes.username' => 'required|email|unique:vba.mailbox,username|unique:vba.alias,address|regex:/'.$domain['domain'].'/',
-            'data.attributes.name' => 'required|string',
-            'data.relationships' => 'sometimes|required|array',
+            'data'                                => 'required|array',
+            'data.type'                           => 'required|in:'.$this->type,
+            'data.id'                             => 'sometimes|client_generated_id_forbiden',
+            'data.attributes'                     => 'required|array',
+            'data.attributes.username'            => 'required|email|unique:vba.mailbox,username|unique:vba.alias,address|regex:/'.$domain['domain'].'/',
+            'data.attributes.name'                => 'required|string',
+            'data.relationships'                  => 'sometimes|required|array',
             'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
-            'data.relationships.domain.data.id' => 'required_with:data.relationships|in:'.$domain->id,
+            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:'.$domain->id,
         ]);
 
         $requestData = $request->all();
@@ -102,23 +102,23 @@ class MailboxController extends ApiController
 
         // create the new mailbox
         $mailbox = $domain->mailboxes()->create([
-            'username' => $requestData['data']['attributes']['username'],
-            'password' => 'doiahoidsa',
-            'name' => $requestData['data']['attributes']['name'],
-            'alt_email' => '',
-            'quota' => $domain['quota'],
-            'local_part' => explode('@', $requestData['data']['attributes']['username'])[0],
-            'active' => 1,
+            'username'           => $requestData['data']['attributes']['username'],
+            'password'           => 'doiahoidsa',
+            'name'               => $requestData['data']['attributes']['name'],
+            'alt_email'          => '',
+            'quota'              => $domain['quota'],
+            'local_part'         => explode('@', $requestData['data']['attributes']['username'])[0],
+            'active'             => 1,
             'access_restriction' => 'ALL',
-            'homedir' => $this->substitute($requestData['data']['attributes']['username'], config('vba.defaults.mailbox.homedir')),
-            'maildir' => $this->substitute($requestData['data']['attributes']['username'], config('vba.defaults.mailbox.maildir')),
-            'uid' => config('vba.defaults.mailbox.uid'),
-            'gid' => config('vba.defaults.mailbox.gid'),
-            'delete_pending' => false,
+            'homedir'            => $this->substitute($requestData['data']['attributes']['username'], config('vba.defaults.mailbox.homedir')),
+            'maildir'            => $this->substitute($requestData['data']['attributes']['username'], config('vba.defaults.mailbox.maildir')),
+            'uid'                => config('vba.defaults.mailbox.uid'),
+            'gid'                => config('vba.defaults.mailbox.gid'),
+            'delete_pending'     => false,
         ]);
 
         // hash the password
-        
+
         if (config('vba.mailboxAliases') == 1) {
             // need to create a new alias as well
             $domain->aliases()->create([
@@ -130,15 +130,14 @@ class MailboxController extends ApiController
         // // do extra work to update the domain counts??
         $domain['mailbox_count'] += 1;
 
-        // TODO: some quota check thing 
-        
-        // save the chanegs 
+        // TODO: some quota check thing
+
+        // save the chanegs
         $domain->save();
 
         $data = $this->transformItem($mailbox);
 
         return $this->respondCreated($data);
-
     }
 
     /**

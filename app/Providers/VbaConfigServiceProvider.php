@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Zend\Config\Reader\Ini;
 use Illuminate\Support\ServiceProvider;
+use Zend\Config\Reader\Ini;
 
 class VbaConfigServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class VbaConfigServiceProvider extends ServiceProvider
     public function boot()
     {
         // load up the vba config ini
-        $vbaArray = (new Ini)->fromFile(env('VBA_CONFIG_FILE'))['user'];
+        $vbaArray = (new Ini())->fromFile(env('VBA_CONFIG_FILE'))['user'];
         $this->app['config']->set('vba', $vbaArray);
     }
 
