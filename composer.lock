@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7038e96ef8547c2ee905606ddb47fd1d",
-    "content-hash": "f5a6575c6bc45bd8f5af64eeeca09b32",
+    "hash": "64f71c596df2f31660d7ece20a8d3207",
+    "content-hash": "ca4d0da9c7f0f4d9d6897d6534e4e6bc",
     "packages": [
         {
             "name": "appzcoder/lumen-routes-list",
@@ -48,6 +48,49 @@
                 "route list"
             ],
             "time": "2015-08-25 14:03:42"
+        },
+        {
+            "name": "defuse/php-passgen",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/defuse/php-passgen.git",
+                "reference": "041aaea933ac06165a8d2eb0368d103980de33d7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/defuse/php-passgen/zipball/041aaea933ac06165a8d2eb0368d103980de33d7",
+                "reference": "041aaea933ac06165a8d2eb0368d103980de33d7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mcrypt": "*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "PasswordGenerator.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Hornby",
+                    "email": "havoc@defuse.ca"
+                }
+            ],
+            "description": "PHP Random Password Generator Library",
+            "keywords": [
+                "generate",
+                "passwords",
+                "random",
+                "security"
+            ],
+            "time": "2015-03-14 20:42:23"
         },
         {
             "name": "doctrine/inflector",
@@ -3342,12 +3385,12 @@
             "version": "0.9.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/padraic/mockery.git",
+                "url": "https://github.com/mockery/mockery.git",
                 "reference": "4de7969f4664da3cef1ccd83866c9f59378c3371"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/4de7969f4664da3cef1ccd83866c9f59378c3371",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/4de7969f4664da3cef1ccd83866c9f59378c3371",
                 "reference": "4de7969f4664da3cef1ccd83866c9f59378c3371",
                 "shasum": ""
             },

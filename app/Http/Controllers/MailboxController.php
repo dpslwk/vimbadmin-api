@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Transformers\MailboxTransformer;
 use App\VbaModels\Domain;
 use App\VbaModels\Mailbox;
-use Exceptions\ForbidenException;
-use Illuminate\Http\Request;
 use League\Fractal\Manager;
+use Illuminate\Http\Request;
+use Exceptions\ForbidenException;
+use App\Transformers\MailboxTransformer;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 class MailboxController extends ApiController
@@ -88,6 +88,7 @@ class MailboxController extends ApiController
             'data.attributes'                     => 'required|array',
             'data.attributes.username'            => 'required|email|unique:vba.mailbox,username|unique:vba.alias,address|regex:/'.$domain['domain'].'/',
             'data.attributes.name'                => 'required|string',
+            'data.attributes.password'            => 'sometimes|string|min:8',
             'data.relationships'                  => 'sometimes|required|array',
             'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
             'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:'.$domain->id,
@@ -100,10 +101,23 @@ class MailboxController extends ApiController
             throw new ForbidenException('You have used all of your allocated mailboxes.');
         }
 
+        // hash the password, set a random one if none given.
+        if (isset($requestData['data']['attributes']['password'])) {
+            $password = $requestData['data']['attributes']['password'];
+        } else {
+            $password = \PasswordGenerator::getASCIIPassword(64);
+        }
+
+        if (app()->environment('production')){
+            $mailbox['password'] = $this->hashPassword($requestData['data']['attributes']['username'], $password);
+        } else {
+            $mailbox['password'] = $password;
+        }
+        
         // create the new mailbox
         $mailbox = $domain->mailboxes()->create([
             'username'           => $requestData['data']['attributes']['username'],
-            'password'           => 'doiahoidsa',
+            'password'           => $password,
             'name'               => $requestData['data']['attributes']['name'],
             'alt_email'          => '',
             'quota'              => $domain['quota'],
@@ -116,8 +130,6 @@ class MailboxController extends ApiController
             'gid'                => config('vba.defaults.mailbox.gid'),
             'delete_pending'     => false,
         ]);
-
-        // hash the password
 
         if (config('vba.mailboxAliases') == 1) {
             // need to create a new alias as well

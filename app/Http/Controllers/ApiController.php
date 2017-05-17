@@ -227,4 +227,41 @@ class ApiController extends Controller
 
         return $str;
     }
+
+    /**
+     * A reimplmentation of Open Solutions' password hash helpers
+     * https://github.com/opensolutions/OSS-Framework/blob/master/src/OSS/Auth/Password.php
+     * https://github.com/opensolutions/ViMbAdmin/blob/master/library/ViMbAdmin/Dovecot.php
+     *
+     * As the frameworks helper calls back into the projects code base :(
+     *
+     * @param string $username
+     * @param string $password
+     * @return string
+     */
+    protected function hashPassword($username, $password)
+    {
+        if (substr(config('vba.defaults.mailbox.password_scheme'), 0, 8 ) != 'dovecot:') {
+            throw new \Exception('Password hasing only supports dovecot', 500);
+        }
+        $scheme = substr( config('vba.defaults.mailbox.password_scheme'), 8 );
+        $cmd = $binary = config('vba.defaults.mailbox.dovecot_pw_binary');
+
+        if (strpos( $cmd, ' ' )) {
+            $binary = substr( $cmd, 0, strpos( $cmd, ' ' ) );
+        }
+        
+        if ( ! file_exists( $binary ) || ! is_executable( $binary )) {
+            throw new \Exception('Dovecot binary does not exist or is not executable' , 500);
+        }
+
+        $cmd .= ' -s ' . escapeshellarg( $scheme ) . ' -u ' . escapeshellarg( $username ) . ' -p ' . escapeshellarg( $password );
+        $a = exec( $cmd, $output, $retval );
+        
+        if ($retval != 0) {
+            throw new \Exception('Error executing Dovecot password command.', 500);
+        }
+        
+        return trim(substr($a, strlen($scheme) + 2));
+    }
 }
