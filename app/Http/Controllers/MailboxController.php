@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use RandomLib\Factory;
 use App\VbaModels\Domain;
 use App\VbaModels\Mailbox;
 use League\Fractal\Manager;
@@ -18,13 +19,20 @@ class MailboxController extends ApiController
     protected $type = 'mailboxes';
 
     /**
+     * @var RandomLib\Generator
+     */
+    protected $generator;
+
+
+    /**
      * @param Domain             $domain
      * @param MailboxTransformer $mailboxTransformer
      * @param Manager            $fractal
      */
-    public function __construct(Domain $domain, MailboxTransformer $mailboxTransformer, Manager $fractal)
+    public function __construct(Domain $domain, MailboxTransformer $mailboxTransformer, Manager $fractal, Factory $factory)
     {
         parent::__construct($domain, $mailboxTransformer, $fractal);
+        $this->generator = $factory->getMediumStrengthGenerator();
     }
 
     /**
@@ -105,7 +113,7 @@ class MailboxController extends ApiController
         if (isset($requestData['data']['attributes']['password'])) {
             $password = $requestData['data']['attributes']['password'];
         } else {
-            $password = \PasswordGenerator::getASCIIPassword(64);
+            $password = $this->generator->generateString(64);
         }
 
         if (app()->environment('production')) {
