@@ -30,26 +30,26 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param \Exception $e
+     * @param \Exception $exception
      *
      * @return void
      */
-    public function report(Exception $e)
+    public function report(Exception $exception)
     {
-        parent::report($e);
+        parent::report($exception);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Exception               $e
+     * @param \Exception               $exception
      *
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $e)
+    public function render($request, Exception $exception)
     {
-        if ($e instanceof ModelNotFoundException) {
+        if ($exception instanceof ModelNotFoundException) {
             $data = [
                 'errors' => [
                     [
@@ -63,14 +63,14 @@ class Handler extends ExceptionHandler
             return response()->json($data, IlluminateResponse::HTTP_NOT_FOUND);
         }
 
-        if ($e instanceof ValidationException) {
+        if ($exception instanceof ValidationException) {
             $data = [
                 'errors' => [
                     [
                         'status' => IlluminateResponse::HTTP_CONFLICT,
                         'title'  => 'Validation Confilict',
                         'detail' => 'The requested does not pass the Validation.',
-                        'meta'   => $e->getResponse()->getData(),
+                        'meta'   => $exception->getResponse()->getData(),
                     ],
                 ],
             ];
@@ -78,7 +78,7 @@ class Handler extends ExceptionHandler
             return response()->json($data, IlluminateResponse::HTTP_CONFLICT);
         }
 
-        if ($e instanceof AuthenticationException) {
+        if ($exception instanceof AuthenticationException) {
             $data = [
                 'errors' => [
                     [
@@ -88,18 +88,18 @@ class Handler extends ExceptionHandler
                     ],
                 ],
             ];
-            // var_dump($e);
+            // var_dump($exception);
             return response()->json($data, IlluminateResponse::HTTP_UNAUTHORIZED);
         }
 
-        if ($e instanceof ForbidenException) {
+        if ($exception instanceof ForbidenException) {
             $data = [
                 'errors' => [
                     [
                         'status' => IlluminateResponse::HTTP_FORBIDDEN,
                         'title'  => 'Forbiden',
                         'detail' => 'This request is forbiden.',
-                        'meta'   => $e->getMessage(),
+                        'meta'   => $exception->getMessage(),
                     ],
                 ],
             ];
@@ -107,6 +107,6 @@ class Handler extends ExceptionHandler
             return response()->json($data, IlluminateResponse::HTTP_FORBIDDEN);
         }
 
-        return parent::render($request, $e);
+        return parent::render($request, $exception);
     }
 }

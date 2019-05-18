@@ -1,0 +1,79 @@
+
+parse_ini_file("test.ini",true)
+../vimbadmin/application/configs/application.ini
+parse_ini_file("../vimbadmin/application/configs/application.ini",true)
+
+
+Verb	Path	Action	Route Name
+GET	/photo	index	photo.index
+GET	/photo/create	create	photo.create
+POST	/photo	store	photo.store
+GET	/photo/{photo}	show	photo.show
+GET	/photo/{photo}/edit	edit	photo.edit
+PUT/PATCH	/photo/{photo}	update	photo.update
+DELETE	/photo/{photo}
+
+
+baseurl
+https://api.vba.lwk.me/
+
+
+domains
+mailboxes
+aliases
+
+/domains/
+
+/{domain}/mailboxes
+
+/{dommin}/mailboxes/{mailbox}/aliases/
+
+/{domain}/aliases/
+
+
+
+/**
+ * Register a resource with the application.
+ *
+ * @param  string  $uri
+ * @param  mixed  $controller
+ * @return $this
+ */
+public function resource($uri, $controller)
+{  
+    $this->get($uri, 'App\Http\Controllers\\'.$controller.'@index');
+    $this->get($uri.'/create', 'App\Http\Controllers\\'.$controller.'@create');
+    $this->post($uri, 'App\Http\Controllers\\'.$controller.'@store');
+    $this->get($uri.'/{id}', 'App\Http\Controllers\\'.$controller.'@show');
+    $this->get($uri.'/{id}/edit', 'App\Http\Controllers\\'.$controller.'@edit');
+    $this->put($uri.'/{id}', 'App\Http\Controllers\\'.$controller.'@update');
+    $this->patch($uri.'/{id}', 'App\Http\Controllers\\'.$controller.'@update');
+    $this->delete($uri.'/{id}', 'App\Http\Controllers\\'.$controller.'@destroy');
+
+    return $this;
+}
+
+
+ GET|HEAD  | api/test             | test.index   | App\Http\Controllers\Test@index   | api
+ POST      | api/test             | test.store   | App\Http\Controllers\Test@store   | api
+ GET|HEAD  | api/test/create      | test.create  | App\Http\Controllers\Test@create  | api
+ DELETE    | api/test/{test}      | test.destroy | App\Http\Controllers\Test@destroy | api
+ PUT|PATCH | api/test/{test}      | test.update  | App\Http\Controllers\Test@update  | api
+ GET|HEAD  | api/test/{test}      | test.show    | App\Http\Controllers\Test@show    | api
+ GET|HEAD  | api/test/{test}/edit | test.edit    | App\Http\Controllers\Test@edit    | api         
+
+
+spatie/laravel-fractal
+
+dusterio/lumen-passport
+
+appzcoder/lumen-routes-list
+$app->register(Appzcoder\LumenRoutesList\RoutesCommandServiceProvider::class);
+
+
+        $bearerToken=$request->bearerToken();
+        $tokenId= (new Parser())->parse($bearerToken)->getHeader('jti');
+        $client = Token::find($tokenId);
+        dd($client->can('place-orders'));
+
+

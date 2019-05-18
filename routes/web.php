@@ -11,84 +11,84 @@
 |
 */
 
-$app->get('/', function () use ($app) {
-    return $app->version();
+$router->get('/', function () use ($router) {
+    return $router->app->version();
 });
 
-$app->group(['middleware' => 'client_credentials'], function () use ($app) {
-    $app->get('domains', [
+$router->group(['middleware' => 'client_credentials'], function () use ($router) {
+    $router->get('domains', [
         'uses' => 'DomainController@index',
         'as'   => 'domains.index',
     ]);
-    $app->get('domains/{domain}', [
+    $router->get('domains/{domain}', [
         'uses' => 'DomainController@show',
         'as'   => 'domains.show',
     ]);
-    $app->get('domains/{domain}/mailboxes', [
+    $router->get('domains/{domain}/mailboxes', [
         'uses' => 'MailboxController@showForDomain',
         'as'   => 'domain.mailboxes',
     ]);
-    $app->get('domains/{domain}/relationships/mailboxes', [
+    $router->get('domains/{domain}/relationships/mailboxes', [
         'uses' => 'MailboxController@showRelationships',
         'as'   => 'domains.relationships.mailboxes',
     ]);
-    $app->get('domains/{domain}/aliases', [
+    $router->get('domains/{domain}/aliases', [
         'uses' => 'AliasController@showForDomain',
         'as'   => 'domain.aliases',
     ]);
-    $app->get('domains/{domain}/relationships/aliases', [
+    $router->get('domains/{domain}/relationships/aliases', [
         'uses' => 'AliasController@showRelationships',
         'as'   => 'domains.relationships.aliases',
     ]);
 
     // Mailboxes
-    $app->get('{domainName}/mailboxes/', [
+    $router->get('{domainName}/mailboxes/', [
         'uses' => 'MailboxController@index',
         'as'   => 'mailboxes.index',
     ]);
-    $app->get('{domainName}/mailboxes/{mailbox}', [
+    $router->get('{domainName}/mailboxes/{mailbox}', [
         'uses' => 'MailboxController@show',
         'as'   => 'mailboxes.show',
     ]);
-    $app->post('{domainName}/mailboxes/', [
+    $router->post('{domainName}/mailboxes/', [
         'uses' => 'MailboxController@store',
         'as'   => 'mailboxes.store',
     ]);
-    $app->patch('{domainName}/mailboxes/{mailbox}', [
+    $router->patch('{domainName}/mailboxes/{mailbox}', [
         'uses' => 'MailboxController@update',
         'as'   => 'mailboxes.update',
     ]);
-    $app->get('{domainName}/mailboxes/{mailbox}/domain', [
+    $router->get('{domainName}/mailboxes/{mailbox}/domain', [
         'uses' => 'DomainController@showForMailbox',
         'as'   => 'mailbox.domain',
     ]);
-    $app->get('{domainName}/mailboxes/{mailbox}/relationships/domain', [
+    $router->get('{domainName}/mailboxes/{mailbox}/relationships/domain', [
         'uses' => 'DomainController@showMailboxRelationships',
         'as'   => 'mailboxes.relationships.domain',
     ]);
 
     // Aliases
-    $app->get('{domainName}/aliases/', [
+    $router->get('{domainName}/aliases/', [
         'uses' => 'AliasController@index',
         'as'   => 'aliases.index',
     ]);
-    $app->get('{domainName}/aliases/{alias}', [
+    $router->get('{domainName}/aliases/{alias}', [
         'uses' => 'AliasController@show',
         'as'   => 'aliases.show',
     ]);
-    $app->post('{domainName}/aliases/', [
+    $router->post('{domainName}/aliases/', [
         'uses' => 'AliasController@store',
         'as'   => 'aliases.store',
     ]);
-    $app->patch('{domainName}/aliases/{alias}', [
+    $router->patch('{domainName}/aliases/{alias}', [
         'uses' => 'AliasController@update',
         'as'   => 'aliases.update',
     ]);
-    $app->get('{domainName}/aliases/{mailbox}/domain', [
+    $router->get('{domainName}/aliases/{mailbox}/domain', [
         'uses' => 'DomainController@showForAlias',
         'as'   => 'aliases.domain',
     ]);
-    $app->get('{domainName}/aliases/{alias}/relationships/domain', [
+    $router->get('{domainName}/aliases/{alias}/relationships/domain', [
         'uses' => 'DomainController@showAliasRelationships',
         'as'   => 'aliases.relationships.domain',
     ]);

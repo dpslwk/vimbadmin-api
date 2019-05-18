@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\User;
 use Laravel\Passport\Passport;
 use Illuminate\Support\ServiceProvider;
+use Dusterio\LumenPassport\LumenPassport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -40,5 +41,7 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensCan([
             //
         ]);
+
+        LumenPassport::routes($this->app->router);
     }
 }

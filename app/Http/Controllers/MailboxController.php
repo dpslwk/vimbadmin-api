@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use RandomLib\Factory;
 use App\VbaModels\Domain;
 use App\VbaModels\Mailbox;
 use League\Fractal\Manager;
@@ -19,20 +18,13 @@ class MailboxController extends ApiController
     protected $type = 'mailboxes';
 
     /**
-     * @var RandomLib\Generator
-     */
-    protected $generator;
-
-
-    /**
      * @param Domain             $domain
      * @param MailboxTransformer $mailboxTransformer
      * @param Manager            $fractal
      */
-    public function __construct(Domain $domain, MailboxTransformer $mailboxTransformer, Manager $fractal, Factory $factory)
+    public function __construct(Domain $domain, MailboxTransformer $mailboxTransformer, Manager $fractal)
     {
         parent::__construct($domain, $mailboxTransformer, $fractal);
-        $this->generator = $factory->getMediumStrengthGenerator();
     }
 
     /**
@@ -91,15 +83,15 @@ class MailboxController extends ApiController
 
         $this->validate($request, [
             'data'                                => 'required|array',
-            'data.type'                           => 'required|in:'.$this->type,
+            'data.type'                           => 'required|in:' . $this->type,
             'data.id'                             => 'sometimes|client_generated_id_forbiden',
             'data.attributes'                     => 'required|array',
-            'data.attributes.username'            => 'required|email|unique:vba.mailbox,username|unique:vba.alias,address|regex:/'.$domain['domain'].'/',
+            'data.attributes.username'            => 'required|email|unique:vba.mailbox,username|unique:vba.alias,address|regex:/' . $domain['domain'] . '/',
             'data.attributes.name'                => 'required|string',
             'data.attributes.password'            => 'sometimes|string|min:8',
             'data.relationships'                  => 'sometimes|required|array',
             'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
-            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:'.$domain->id,
+            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:' . $domain->id,
         ]);
 
         $requestData = $request->all();
@@ -113,7 +105,7 @@ class MailboxController extends ApiController
         if (isset($requestData['data']['attributes']['password'])) {
             $password = $requestData['data']['attributes']['password'];
         } else {
-            $password = $this->generator->generateString(64);
+            $password = random_bytes(64);
         }
 
         if (app()->environment('production')) {
@@ -194,13 +186,13 @@ class MailboxController extends ApiController
 
         $this->validate($request, [
             'data'                                => 'required|array',
-            'data.type'                           => 'required|in'.$this->type,
-            'data.id'                             => 'required|integer|in:'.$mailboxId,
+            'data.type'                           => 'required|in' . $this->type,
+            'data.id'                             => 'required|integer|in:' . $mailboxId,
             'data.attributes'                     => 'required|array',
             'data.attributes.name'                => 'sometimes|required|string',
             'data.relationships'                  => 'sometimes|required|array',
             'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
-            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:'.$domain->id,
+            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:' . $domain->id,
         ]);
 
         $requestData = $request->all();
@@ -237,7 +229,7 @@ class MailboxController extends ApiController
         }
         $data['data'] = $newdata;
         unset($data['included']);
-        $related = url($domain->domain.'/mailboxes');
+        $related = url($domain->domain . '/mailboxes');
 
         return $this->respondRelated($data, $related);
     }

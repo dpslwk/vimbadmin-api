@@ -79,7 +79,7 @@ class AliasController extends ApiController
 
         $this->validate($request, [
             'data'                                => 'required|array',
-            'data.type'                           => 'required|in:'.$this->type,
+            'data.type'                           => 'required|in:' . $this->type,
             'data.id'                             => 'sometimes|null',
             'data.attributes'                     => 'required|array',
             'data.attributes.address'             => 'required|email|unique:vba.alias,address|unique:vba.mailbox,username',
@@ -87,7 +87,7 @@ class AliasController extends ApiController
             'data.attributes.goto.*'              => 'required_with:data.attributes.goto|email',
             'data.relationships'                  => 'required|array',
             'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
-            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:'.$domain->id,
+            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:' . $domain->id,
         ]);
 
         $requestData = $request->all();
@@ -147,15 +147,15 @@ class AliasController extends ApiController
 
         $this->validate($request, [
             'data'                                => 'required|array',
-            'data.type'                           => 'required|in:'.$this->type,
-            'data.id'                             => 'required|integer|in:'.$aliasId,
+            'data.type'                           => 'required|in:' . $this->type,
+            'data.id'                             => 'required|integer|in:' . $aliasId,
             'data.attributes'                     => 'required|array',
             'data.attributes.address'             => 'sometimes|required|email',
             'data.attributes.goto'                => 'sometimes|required|array',
             'data.attributes.goto.*'              => 'required_with:data.attributes.goto|email',
             'data.relationships'                  => 'sometimes|required|array',
             'data.relationships.domain.data.type' => 'required_with:data.relationships|in:domain',
-            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:'.$domain->id,
+            'data.relationships.domain.data.id'   => 'required_with:data.relationships|in:' . $domain->id,
         ]);
 
         $requestData = $request->all();
@@ -196,7 +196,7 @@ class AliasController extends ApiController
         }
         $data['data'] = $newdata;
         unset($data['included']);
-        $related = url($domain->domain.'/aliases');
+        $related = url($domain->domain . '/aliases');
 
         return $this->respondRelated($data, $related);
     }
