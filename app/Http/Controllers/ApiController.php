@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\VbaModels\Domain;
+use Illuminate\Support\Arr;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
@@ -201,7 +202,7 @@ class ApiController extends Controller
     {
         $routeInfo = app('request')->route();
 
-        return array_get($routeInfo[2], $name, $default);
+        return Arr::get($routeInfo[2], $name, $default);
     }
 
     /**
