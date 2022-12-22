@@ -73,7 +73,7 @@ $app->configure('app');
 */
 
 $app->middleware([
-   App\Http\Middleware\JsonRequestMiddleware::class,
+    App\Http\Middleware\JsonRequestMiddleware::class,
 ]);
 
 $app->routeMiddleware([

@@ -32,10 +32,10 @@ class Alias extends Model
      * @var array
      */
     protected $fillable = [
-    'address',
-    'goto',
-    'active',
-    'Domain_id',
+        'address',
+        'goto',
+        'active',
+        'Domain_id',
     ];
 
     /**

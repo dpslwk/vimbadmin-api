@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Transformers\AliasTransformer;
 use App\VbaModels\Alias;
 use App\VbaModels\Domain;
-use League\Fractal\Manager;
 use Illuminate\Http\Request;
-use App\Transformers\AliasTransformer;
+use League\Fractal\Manager;
 
 class AliasController extends ApiController
 {

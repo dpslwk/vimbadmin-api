@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Transformers\MailboxTransformer;
 use App\VbaModels\Domain;
 use App\VbaModels\Mailbox;
-use League\Fractal\Manager;
-use Illuminate\Http\Request;
 use Exceptions\ForbidenException;
-use App\Transformers\MailboxTransformer;
+use Illuminate\Http\Request;
+use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 class MailboxController extends ApiController

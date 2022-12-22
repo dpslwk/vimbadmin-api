@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\VbaModels\Domain;
+use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Support\Arr;
 use League\Fractal\Manager;
-use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
-use League\Fractal\TransformerAbstract;
+use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Illuminate\Http\Response as IlluminateResponse;
+use League\Fractal\TransformerAbstract;
 
 class ApiController extends Controller
 {
@@ -238,6 +238,7 @@ class ApiController extends Controller
      *
      * @param string $username
      * @param string $password
+     *
      * @return string
      */
     protected function hashPassword($username, $password)
