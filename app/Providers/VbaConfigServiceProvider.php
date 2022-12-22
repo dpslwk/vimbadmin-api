@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Zend\Config\Reader\Ini;
 use Illuminate\Support\ServiceProvider;
+use Laminas\Config\Reader\Ini;
 
 class VbaConfigServiceProvider extends ServiceProvider
 {

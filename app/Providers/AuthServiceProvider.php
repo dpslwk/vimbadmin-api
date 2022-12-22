@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\User;
-use Laravel\Passport\Passport;
-use Illuminate\Support\ServiceProvider;
+use App\Models\User;
 use Dusterio\LumenPassport\LumenPassport;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
