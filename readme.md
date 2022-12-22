@@ -12,8 +12,6 @@ The down side of ViMdAdmin is that it has no APi front end and at Nottingham Hac
 
 # Setup Notes
 
-Requires php mcrypt.
-
 Two database conections are used, first to the app's own DB (this looks after the API oauth stuff), second to the ViMbAdmin DB, details for both need to be defined in the .env file as below.
 Along with the location to the ViMbAdmin aplliction config file
 

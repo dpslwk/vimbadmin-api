@@ -144,7 +144,7 @@ class MailboxController extends ApiController
 
         // TODO: some quota check thing
 
-        // save the chanegs
+        // save the changes
         $domain->save();
 
         $data = $this->transformItem($mailbox);

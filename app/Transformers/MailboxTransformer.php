@@ -17,6 +17,15 @@ class MailboxTransformer extends TransformerAbstract
     ];
 
     /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected $availableIncludes = [
+        //
+    ];
+
+    /**
      * defines how to transform the model.
      *
      * @param Mailbox $domain

@@ -8,6 +8,15 @@ use League\Fractal\TransformerAbstract;
 class DomainTransformer extends TransformerAbstract
 {
     /**
+     * List of resources to automatically include
+     *
+     * @var array
+     */
+    protected $defaultIncludes = [
+        //
+    ];
+
+    /**
      * List of resources possible to include.
      *
      * @var array

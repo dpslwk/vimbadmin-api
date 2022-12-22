@@ -25,6 +25,8 @@ paths:
     post:
       description: Request Auth token
       operationId: requestToken
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: client_id
           in: formData
@@ -236,7 +238,7 @@ paths:
         '401':
           $ref: '#/responses/401'
         default:
-          $ref: '#/responses/default'    
+          $ref: '#/responses/default'
     post:
       description: Create a new alias
       operationId: createAlias
