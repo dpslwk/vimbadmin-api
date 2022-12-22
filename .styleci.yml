@@ -2,13 +2,17 @@ preset: laravel
 
 enabled:
     - concat_with_spaces
+    - phpdoc_separation
 
 disabled:
     - phpdoc_no_package
     - concat_without_spaces
-    - simplified_null_return
+    - laravel_phpdoc_alignment
+    - laravel_phpdoc_separation
 
 finder:
+    exclude:
+        - "tests"
     not-path:
         - "public/index.php"
         - "server.php"
